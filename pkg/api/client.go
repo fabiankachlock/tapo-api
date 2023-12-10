@@ -28,8 +28,6 @@ type ApiClient struct {
 	cookieJar   *cookiejar.Jar
 }
 
-type ApiClientGeneric[T any] TapoResponse[T]
-
 func NewClient(ip, email, password string) (*ApiClient, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {

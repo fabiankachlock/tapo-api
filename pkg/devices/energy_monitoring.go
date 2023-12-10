@@ -1,6 +1,10 @@
 package devices
 
-import "github.com/fabiankachlock/tapo-api/pkg/api"
+import (
+	"github.com/fabiankachlock/tapo-api/pkg/api"
+	"github.com/fabiankachlock/tapo-api/pkg/api/request"
+	"github.com/fabiankachlock/tapo-api/pkg/api/response"
+)
 
 type TapoEnergyMonitoringPlug struct {
 	client *api.ApiClient
@@ -26,28 +30,28 @@ func (t *TapoEnergyMonitoringPlug) RefreshSession() error {
 	return t.client.RefreshSession()
 }
 
-func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (api.DeviceInfoPlug, error) {
-	response, err := t.client.Request(api.RequestGetDeviceInfo, api.EmptyParams)
+func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoPlug, error) {
+	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
 	if err != nil {
-		return api.DeviceInfoPlug{}, err
+		return response.DeviceInfoPlug{}, err
 	}
 
-	data, err := api.UnmarshalResponse[api.DeviceInfoPlug](response)
+	data, err := response.UnmarshalResponse[response.DeviceInfoPlug](resp)
 	if err != nil {
-		return api.DeviceInfoPlug{}, err
+		return response.DeviceInfoPlug{}, err
 	}
 	return data.Result, nil
 }
 
 func (t *TapoEnergyMonitoringPlug) On() error {
-	_, err := t.client.Request(api.RequestSetDeviceInfo, api.PlugDeviceInfoParams{
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.PlugDeviceInfoParams{
 		On: true,
 	})
 	return err
 }
 
 func (t *TapoEnergyMonitoringPlug) Off() error {
-	_, err := t.client.Request(api.RequestSetDeviceInfo, api.PlugDeviceInfoParams{
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.PlugDeviceInfoParams{
 		On: false,
 	})
 	return err
@@ -64,46 +68,46 @@ func (t *TapoEnergyMonitoringPlug) Toggle() error {
 	return t.On()
 }
 
-func (t *TapoEnergyMonitoringPlug) SetDeviceInfo(info api.PlugDeviceInfoParams) error {
-	_, err := t.client.Request(api.RequestSetDeviceInfo, info)
+func (t *TapoEnergyMonitoringPlug) SetDeviceInfo(info request.PlugDeviceInfoParams) error {
+	_, err := t.client.Request(request.RequestSetDeviceInfo, info)
 	return err
 }
 
-func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (api.DeviceUsageEnergyMonitor, error) {
-	response, err := t.client.Request(api.RequestGetDeviceInfo, api.EmptyParams)
+func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
+	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
 	if err != nil {
-		return api.DeviceUsageEnergyMonitor{}, err
+		return response.DeviceUsageEnergyMonitor{}, err
 	}
 
-	data, err := api.UnmarshalResponse[api.DeviceUsageEnergyMonitor](response)
+	data, err := response.UnmarshalResponse[response.DeviceUsageEnergyMonitor](resp)
 	if err != nil {
-		return api.DeviceUsageEnergyMonitor{}, err
-	}
-	return data.Result, nil
-}
-
-func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params api.GetEnergyDataParams) (api.EnergyUsage, error) {
-	response, err := t.client.Request(api.RequestGetDeviceInfo, params)
-	if err != nil {
-		return api.EnergyUsage{}, err
-	}
-
-	data, err := api.UnmarshalResponse[api.EnergyUsage](response)
-	if err != nil {
-		return api.EnergyUsage{}, err
+		return response.DeviceUsageEnergyMonitor{}, err
 	}
 	return data.Result, nil
 }
 
-func (t *TapoEnergyMonitoringPlug) GetCurrentPower() (api.CurrentPower, error) {
-	response, err := t.client.Request(api.RequestGetDeviceInfo, api.EmptyParams)
+func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params request.GetEnergyDataParams) (response.EnergyUsage, error) {
+	resp, err := t.client.Request(request.RequestGetDeviceInfo, params)
 	if err != nil {
-		return api.CurrentPower{}, err
+		return response.EnergyUsage{}, err
 	}
 
-	data, err := api.UnmarshalResponse[api.CurrentPower](response)
+	data, err := response.UnmarshalResponse[response.EnergyUsage](resp)
 	if err != nil {
-		return api.CurrentPower{}, err
+		return response.EnergyUsage{}, err
+	}
+	return data.Result, nil
+}
+
+func (t *TapoEnergyMonitoringPlug) GetCurrentPower() (response.CurrentPower, error) {
+	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
+	if err != nil {
+		return response.CurrentPower{}, err
+	}
+
+	data, err := response.UnmarshalResponse[response.CurrentPower](resp)
+	if err != nil {
+		return response.CurrentPower{}, err
 	}
 	return data.Result, nil
 }
