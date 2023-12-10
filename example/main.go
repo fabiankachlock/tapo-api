@@ -18,5 +18,5 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	device.Off()
+	device.Toggle()
 }

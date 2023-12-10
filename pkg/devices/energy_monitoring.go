@@ -27,19 +27,41 @@ func (t *TapoEnergyMonitoringPlug) RefreshSession() error {
 }
 
 func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (api.DeviceInfoPlug, error) {
-	return api.DeviceInfoPlug{}, nil
+	response, err := t.client.Request(api.RequestGetDeviceInfo, api.EmptyParams)
+	if err != nil {
+		return api.DeviceInfoPlug{}, err
+	}
+
+	data, err := api.UnmarshalResponse[api.DeviceInfoPlug](response)
+	if err != nil {
+		return api.DeviceInfoPlug{}, err
+	}
+	return data.Result, nil
 }
 
 func (t *TapoEnergyMonitoringPlug) On() error {
-	return nil
+	_, err := t.client.Request(api.RequestSetDeviceInfo, map[string]interface{}{
+		"device_on": true,
+	})
+	return err
 }
 
 func (t *TapoEnergyMonitoringPlug) Off() error {
-	return nil
+	_, err := t.client.Request(api.RequestSetDeviceInfo, map[string]interface{}{
+		"device_on": false,
+	})
+	return err
 }
 
 func (t *TapoEnergyMonitoringPlug) Toggle() error {
-	return nil
+	state, err := t.GetDeviceInfo()
+	if err != nil {
+		return err
+	}
+	if state.DeviceOn {
+		return t.Off()
+	}
+	return t.On()
 }
 
 func (t *TapoEnergyMonitoringPlug) SetDeviceInfo(info api.PlugDeviceInfoParams) error {
@@ -47,13 +69,40 @@ func (t *TapoEnergyMonitoringPlug) SetDeviceInfo(info api.PlugDeviceInfoParams) 
 }
 
 func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (api.DeviceUsageEnergyMonitor, error) {
-	return api.DeviceUsageEnergyMonitor{}, nil
+	response, err := t.client.Request(api.RequestGetDeviceInfo, api.EmptyParams)
+	if err != nil {
+		return api.DeviceUsageEnergyMonitor{}, err
+	}
+
+	data, err := api.UnmarshalResponse[api.DeviceUsageEnergyMonitor](response)
+	if err != nil {
+		return api.DeviceUsageEnergyMonitor{}, err
+	}
+	return data.Result, nil
 }
 
 func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params api.GetEnergyDataParams) (api.EnergyUsage, error) {
+	// response, err := t.client.Request(api.RequestGetDeviceInfo, params)
+	// if err != nil {
 	return api.EnergyUsage{}, nil
+	// }
+
+	// data, err := api.UnmarshalResponse[api.EnergyUsage](response)
+	// if err != nil {
+	// 	return api.EnergyUsage{}, err
+	// }
+	// return data.Result, nil
 }
 
 func (t *TapoEnergyMonitoringPlug) GetCurrentPower() (api.CurrentPower, error) {
-	return api.CurrentPower{}, nil
+	response, err := t.client.Request(api.RequestGetDeviceInfo, api.EmptyParams)
+	if err != nil {
+		return api.CurrentPower{}, err
+	}
+
+	data, err := api.UnmarshalResponse[api.CurrentPower](response)
+	if err != nil {
+		return api.CurrentPower{}, err
+	}
+	return data.Result, nil
 }

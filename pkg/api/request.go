@@ -22,6 +22,10 @@ const (
 	RequestGetTemperatureHumidityRecords = "get_temp_humidity_records"
 )
 
+var (
+	EmptyParams = map[string]interface{}{}
+)
+
 type PlugDeviceInfoParams struct {
 	On bool `json:"device_on"`
 }
