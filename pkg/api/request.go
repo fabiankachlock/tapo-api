@@ -1,6 +1,8 @@
 package api
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	RequestComponentNegotiation          = "component_nego"

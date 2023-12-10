@@ -85,7 +85,7 @@ func (d *ApiClient) RefreshSession() error {
 	return d.Login()
 }
 
-func (d *ApiClient) Request(method string, params map[string]interface{}) ([]byte, error) {
+func (d *ApiClient) Request(method string, params interface{}) ([]byte, error) {
 	request := map[string]interface{}{
 		"method":           method,
 		"params":           params,
