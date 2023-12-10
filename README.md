@@ -6,6 +6,7 @@ Reverse engineered from https://k4czp3r.xyz/blog/post/reverse-engineering-tp-lin
 Reference implementation: https://github.dev/mihai-dinculescu/tapo
 
 Supported Devices:
+- P110
 - P115
 
 Supported Protocols:

@@ -17,25 +17,26 @@ import (
 	"github.com/fabiankachlock/tapo-api/pkg/klap"
 )
 
-type TapoClient struct {
+type ApiClient struct {
 	Ip          net.IP
 	Email       string
 	Password    string
 	HandshakeTS time.Time
-	client      *http.Client
-	sessionId   string
 	url         string
+	client      *http.Client
 	cipher      *klap.KLAPCipher
 	cookieJar   *cookiejar.Jar
 }
 
-func NewClient(ip, email, password string) (*TapoClient, error) {
+type ApiClientGeneric[T any] TapoResponse[T]
+
+func NewClient(ip, email, password string) (*ApiClient, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, err
 	}
 
-	client := &TapoClient{
+	client := &ApiClient{
 		Ip:        net.ParseIP(ip),
 		Email:     email,
 		Password:  password,
@@ -49,7 +50,7 @@ func NewClient(ip, email, password string) (*TapoClient, error) {
 	return client, nil
 }
 
-func (d *TapoClient) Handshake() error {
+func (d *ApiClient) Login() error {
 	hashedUsername := sha1.Sum([]byte(d.Email))
 	hashedPassword := sha1.Sum([]byte(d.Password))
 	authHash := sha256.Sum256(append(hashedUsername[:], hashedPassword[:]...))
@@ -61,19 +62,17 @@ func (d *TapoClient) Handshake() error {
 	if err != nil {
 		return err
 	}
-	log.Println("handshake 1 ok")
 
 	err = d.handshake2(d.url, localSeed, remoteSeed, authHash[:])
 	if err != nil {
 		return err
 	}
 
-	log.Println("handshake 2 ok")
 	d.cipher = klap.NewCipher(localSeed, remoteSeed, authHash[:])
 	return nil
 }
 
-func (d *TapoClient) RefreshSession() error {
+func (d *ApiClient) RefreshSession() error {
 	// clear cookies
 	jar, err := cookiejar.New(nil)
 	if err != nil {
@@ -83,17 +82,10 @@ func (d *TapoClient) RefreshSession() error {
 		Jar: jar,
 	}
 
-	return d.Handshake()
+	return d.Login()
 }
 
-func (d *TapoClient) TurnOn(isOn bool) error {
-	deviceInfo := map[string]interface{}{
-		"device_on": isOn,
-	}
-	return d.Request("set_device_info", deviceInfo)
-}
-
-func (d *TapoClient) Request(method string, params map[string]interface{}) error {
+func (d *ApiClient) Request(method string, params map[string]interface{}) ([]byte, error) {
 	request := map[string]interface{}{
 		"method":           method,
 		"params":           params,
@@ -102,32 +94,30 @@ func (d *TapoClient) Request(method string, params map[string]interface{}) error
 	}
 	requestData, err := json.Marshal(request)
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
 
 	payload, seq, err := d.cipher.Encrypt(requestData)
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
 
 	resp, err := d.client.Post(fmt.Sprintf("%s/request?seq=%d", d.url, seq), "application/x-www-form-urlencoded", bytes.NewReader(payload))
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
 
 	buf := make([]byte, resp.ContentLength)
 	resp.Body.Read(buf)
 	decrypted, err := d.cipher.Decrypt(seq, buf)
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
 
-	fmt.Println(resp.Status)
-	fmt.Println(string(decrypted))
-	return nil
+	return decrypted, nil
 }
 
-func (d *TapoClient) handshake1(url string, localSeed []byte, authHash []byte) ([]byte, error) {
+func (d *ApiClient) handshake1(url string, localSeed []byte, authHash []byte) ([]byte, error) {
 	resp, err := d.client.Post(fmt.Sprintf("%s/handshake1", url), "application/x-www-form-urlencoded", bytes.NewReader(localSeed))
 	if err != nil {
 		return []byte{}, err
@@ -135,11 +125,6 @@ func (d *TapoClient) handshake1(url string, localSeed []byte, authHash []byte) (
 
 	buf := make([]byte, resp.ContentLength)
 	resp.Body.Read(buf)
-	for _, cookie := range resp.Cookies() {
-		if cookie.Name == "TP_SESSIONID" {
-			d.sessionId = cookie.Value
-		}
-	}
 	remoteSeed := buf[0:16]
 	serverHash := buf[16:]
 	localHash := sha256.Sum256(append(append(localSeed, remoteSeed...), authHash...))
@@ -150,7 +135,7 @@ func (d *TapoClient) handshake1(url string, localSeed []byte, authHash []byte) (
 	return remoteSeed, nil
 }
 
-func (d *TapoClient) handshake2(url string, localSeed, remoteSeed, authHash []byte) error {
+func (d *ApiClient) handshake2(url string, localSeed, remoteSeed, authHash []byte) error {
 	payload := sha256.Sum256(append(append(remoteSeed, localSeed...), authHash...))
 	resp, err := d.client.Post(fmt.Sprintf("%s/handshake2", url), "application/x-www-form-urlencoded", bytes.NewReader(payload[:]))
 	if err != nil {

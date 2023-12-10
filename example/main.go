@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/fabiankachlock/tapo-api/pkg/api"
+	"github.com/fabiankachlock/tapo-api"
 )
 
 func main() {
@@ -12,41 +12,11 @@ func main() {
 	tapoEmail := os.Getenv("TAPO_EMAIL")
 	tapoPass := os.Getenv("TAPO_PASS")
 
-	client, err := api.NewClient(tapoIp, tapoEmail, tapoPass)
+	client := tapo.NewClient(tapoEmail, tapoPass)
+	device, err := client.P115(tapoIp)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	err = client.Handshake()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = client.Request("get_device_info", map[string]interface{}{})
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	err = client.Request("get_device_usage", map[string]interface{}{})
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	err = client.Request("get_energy_usage", map[string]interface{}{})
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	// err = client.Request("get_energy_data", map[string]interface{}{
-	// 	"start_timestamp": 0,
-	// 	"end_timestamp": 1,
-	// 	"interval":        60,
-	// })
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-
-	err = client.Request("get_current_power", map[string]interface{}{})
-	if err != nil {
-		log.Fatalln(err)
-	}
+	device.Off()
 }
