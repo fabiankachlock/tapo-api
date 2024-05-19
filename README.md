@@ -2,8 +2,14 @@
 
 An unofficial TPLink Tapo API Client written in Go.
 
-Reverse engineered from https://k4czp3r.xyz/blog/post/reverse-engineering-tp-link-tapo
+![GitHub Release](https://img.shields.io/github/v/release/fabiankachlock/tapo-api?style=for-the-badge)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/fabiankachlock/tapo-api?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/fabiankachlock/tapo-api?style=for-the-badge)
+
+Reverse engineered from https://k4czp3r.xyz/blog/post/reverse-engineering-tp-link-tapo \
 Reference implementation: https://github.com/mihai-dinculescu/tapo
+
+Docs: https://pkg.go.dev/github.com/fabiankachlock/tapo-api
 
 ## Usage
 
