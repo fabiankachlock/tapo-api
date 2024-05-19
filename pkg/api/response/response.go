@@ -51,3 +51,11 @@ type EnergyUsage struct {
 type CurrentPower struct {
 	CurrentPower uint64 `json:"current_power"`
 }
+
+type HandshakeResponse struct {
+	Key string `json:"key"`
+}
+
+type TokenResponse struct {
+	Token string `json:"token"`
+}

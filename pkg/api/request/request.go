@@ -23,3 +23,12 @@ const (
 var (
 	EmptyParams = map[string]interface{}{}
 )
+
+type HandshakeParams struct {
+	Key string `json:"key"`
+}
+
+type LoginDeviceParams struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
