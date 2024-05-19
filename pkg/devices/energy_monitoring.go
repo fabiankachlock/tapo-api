@@ -11,25 +11,21 @@ import (
 // [P110]: https://www.tapo.com/en/search/?q=P110
 // [P115]: https://www.tapo.com/en/search/?q=P115
 type TapoEnergyMonitoringPlug struct {
-	client *api.ApiClient
+	client api.Protocol
 }
 
 // NewP110 creates a new Tapo P110 device.
-func NewP110(ip, email, password string) (*TapoEnergyMonitoringPlug, error) {
-	client, err := api.NewClient(ip, email, password)
-	client.Login()
+func NewP110(client api.Protocol) *TapoEnergyMonitoringPlug {
 	return &TapoEnergyMonitoringPlug{
 		client: client,
-	}, err
+	}
 }
 
 // NewP115 creates a new Tapo P115 device.
-func NewP115(ip, email, password string) (*TapoEnergyMonitoringPlug, error) {
-	client, err := api.NewClient(ip, email, password)
-	client.Login()
+func NewP115(client api.Protocol) *TapoEnergyMonitoringPlug {
 	return &TapoEnergyMonitoringPlug{
 		client: client,
-	}, err
+	}
 }
 
 // RefreshSession refreshes the authentication session of the client.

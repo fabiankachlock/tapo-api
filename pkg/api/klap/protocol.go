@@ -1,4 +1,4 @@
-package api
+package klap
 
 import (
 	"bytes"
@@ -9,38 +9,34 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"time"
 
-	"github.com/fabiankachlock/tapo-api/pkg/klap"
+	"github.com/fabiankachlock/tapo-api/pkg/api"
 )
 
-// ApiClient is the main struct to interact with the raw Tapo API.
-type ApiClient struct {
-	Ip          net.IP
-	Email       string
-	Password    string
-	HandshakeTS time.Time
-	url         string
-	client      *http.Client
-	cipher      *klap.KLAPCipher
-	cookieJar   *cookiejar.Jar
+type KLAPProtocol struct {
+	email     string
+	password  string
+	url       string
+	client    *http.Client
+	cipher    *KLAPCipher
+	cookieJar *cookiejar.Jar
 }
 
-// NewClient creates a new ApiClient.
-func NewClient(ip, email, password string) (*ApiClient, error) {
+var _ api.Protocol = (*KLAPProtocol)(nil)
+
+func NewProtocol(opts api.ProtocolOptions) (*KLAPProtocol, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, err
 	}
 
-	client := &ApiClient{
-		Ip:        net.ParseIP(ip),
-		Email:     email,
-		Password:  password,
-		url:       fmt.Sprintf("http://%s/app", ip),
+	client := &KLAPProtocol{
+		email:     opts.Email,
+		password:  opts.Password,
+		url:       opts.Url,
 		cookieJar: jar,
 		client: &http.Client{
 			Jar: jar,
@@ -51,9 +47,9 @@ func NewClient(ip, email, password string) (*ApiClient, error) {
 }
 
 // Login logs in to the Tapo API.
-func (d *ApiClient) Login() error {
-	hashedUsername := sha1.Sum([]byte(d.Email))
-	hashedPassword := sha1.Sum([]byte(d.Password))
+func (d *KLAPProtocol) Login() error {
+	hashedUsername := sha1.Sum([]byte(d.email))
+	hashedPassword := sha1.Sum([]byte(d.password))
 	authHash := sha256.Sum256(append(hashedUsername[:], hashedPassword[:]...))
 
 	localSeed := make([]byte, 16)
@@ -69,12 +65,12 @@ func (d *ApiClient) Login() error {
 		return err
 	}
 
-	d.cipher = klap.NewCipher(localSeed, remoteSeed, authHash[:])
+	d.cipher = NewCipher(localSeed, remoteSeed, authHash[:])
 	return nil
 }
 
 // RefreshSession refreshes the authentication session of the client.
-func (d *ApiClient) RefreshSession() error {
+func (d *KLAPProtocol) RefreshSession() error {
 	// clear cookies
 	jar, err := cookiejar.New(nil)
 	if err != nil {
@@ -88,7 +84,7 @@ func (d *ApiClient) RefreshSession() error {
 }
 
 // Request sends a request to the Tapo API.
-func (d *ApiClient) Request(method string, params interface{}) ([]byte, error) {
+func (d *KLAPProtocol) Request(method string, params interface{}) ([]byte, error) {
 	request := map[string]interface{}{
 		"method":           method,
 		"params":           params,
@@ -120,7 +116,7 @@ func (d *ApiClient) Request(method string, params interface{}) ([]byte, error) {
 	return decrypted, nil
 }
 
-func (d *ApiClient) handshake1(url string, localSeed []byte, authHash []byte) ([]byte, error) {
+func (d *KLAPProtocol) handshake1(url string, localSeed []byte, authHash []byte) ([]byte, error) {
 	resp, err := d.client.Post(fmt.Sprintf("%s/handshake1", url), "application/x-www-form-urlencoded", bytes.NewReader(localSeed))
 	if err != nil {
 		return []byte{}, err
@@ -138,7 +134,7 @@ func (d *ApiClient) handshake1(url string, localSeed []byte, authHash []byte) ([
 	return remoteSeed, nil
 }
 
-func (d *ApiClient) handshake2(url string, localSeed, remoteSeed, authHash []byte) error {
+func (d *KLAPProtocol) handshake2(url string, localSeed, remoteSeed, authHash []byte) error {
 	payload := sha256.Sum256(append(append(remoteSeed, localSeed...), authHash...))
 	resp, err := d.client.Post(fmt.Sprintf("%s/handshake2", url), "application/x-www-form-urlencoded", bytes.NewReader(payload[:]))
 	if err != nil {
