@@ -40,15 +40,13 @@ func main() {
 
 Supported Devices:
 - P110
-- P115
-
-Tested plugs (P115).
+- P115 (tested)
 
 Supported Protocols:
 - KLAP
 
-&check; - Implemented \
-&#x2705; - Supported by reference implementation in rust
+&#x2705; - Implemented \
+&check; - Supported by reference implementation in rust
 
 | Feature<br/><br/><br/>               | GenericDevice<br/><br/><br/> | L510<br/>L520<br/>L610 | L530<br/>L630<br/><br/> | L900<br/><br/><br/> | L920<br/>L930<br/><br/> | P100<br/>P105<br/><br/> | P110<br/>P115<br/><br/> | P300<br/><br/><br/> | H100<br/><br/><br/> |
 | ------------------------------------ | :--------------------------: | :--------------------: | :---------------------: | :-----------------: | :---------------------: | :---------------------: | :---------------------: | :-----------------: | :-----------------: |
