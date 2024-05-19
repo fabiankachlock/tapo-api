@@ -17,6 +17,7 @@ import (
 	"github.com/fabiankachlock/tapo-api/pkg/klap"
 )
 
+// ApiClient is the main struct to interact with the raw Tapo API.
 type ApiClient struct {
 	Ip          net.IP
 	Email       string
@@ -28,6 +29,7 @@ type ApiClient struct {
 	cookieJar   *cookiejar.Jar
 }
 
+// NewClient creates a new ApiClient.
 func NewClient(ip, email, password string) (*ApiClient, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
@@ -48,6 +50,7 @@ func NewClient(ip, email, password string) (*ApiClient, error) {
 	return client, nil
 }
 
+// Login logs in to the Tapo API.
 func (d *ApiClient) Login() error {
 	hashedUsername := sha1.Sum([]byte(d.Email))
 	hashedPassword := sha1.Sum([]byte(d.Password))
@@ -70,6 +73,7 @@ func (d *ApiClient) Login() error {
 	return nil
 }
 
+// RefreshSession refreshes the authentication session of the client.
 func (d *ApiClient) RefreshSession() error {
 	// clear cookies
 	jar, err := cookiejar.New(nil)
@@ -83,6 +87,7 @@ func (d *ApiClient) RefreshSession() error {
 	return d.Login()
 }
 
+// Request sends a request to the Tapo API.
 func (d *ApiClient) Request(method string, params interface{}) ([]byte, error) {
 	request := map[string]interface{}{
 		"method":           method,

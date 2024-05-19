@@ -8,6 +8,7 @@ type GetEnergyDataParams struct {
 	Interval       uint64 `json:"interval"`
 }
 
+// GetEnergyDataParamsHourly creates [GetEnergyDataParams] for hourly data.
 func GetEnergyDataParamsHourly(start time.Time, end time.Time) GetEnergyDataParams {
 	return GetEnergyDataParams{
 		StartTimestamp: uint64(time.Date(start.Year(), start.Month(), start.Day(), 0, 0, 0, 0, start.Location()).Unix()),
@@ -16,6 +17,7 @@ func GetEnergyDataParamsHourly(start time.Time, end time.Time) GetEnergyDataPara
 	}
 }
 
+// GetEnergyDataParamsDaily creates [GetEnergyDataParams] for daily data.
 func GetEnergyDataParamsDaily(start time.Time) GetEnergyDataParams {
 	ts := uint64(time.Date(start.Year(), start.Month(), start.Day(), 0, 0, 0, 0, start.Location()).Unix())
 	return GetEnergyDataParams{
@@ -25,6 +27,7 @@ func GetEnergyDataParamsDaily(start time.Time) GetEnergyDataParams {
 	}
 }
 
+// GetEnergyDataParamsMonthly creates [GetEnergyDataParams] for monthly data.
 func GetEnergyDataParamsMonthly(start time.Time) GetEnergyDataParams {
 	ts := uint64(time.Date(start.Year(), start.Month(), start.Day(), 0, 0, 0, 0, start.Location()).Unix())
 	return GetEnergyDataParams{
