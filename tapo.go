@@ -1,6 +1,10 @@
 package tapo
 
-import "github.com/fabiankachlock/tapo-api/pkg/devices"
+import (
+	"encoding/base64"
+
+	"github.com/fabiankachlock/tapo-api/pkg/devices"
+)
 
 // TapoClient is the main struct to interact with the Tapo API
 type TapoClient struct {
@@ -31,4 +35,12 @@ func (t TapoClient) H100(ip string) (*devices.TapoHub, error) {
 // H200 creates a new Tapo H200 device
 func (t TapoClient) H200(ip string) (*devices.TapoHub, error) {
 	return devices.NewH200(ip, t.username, t.password)
+}
+
+func GetNickname(nickname string) string {
+	decodedBytes, err := base64.StdEncoding.DecodeString(nickname)
+	if err != nil {
+		return nickname
+	}
+	return string(decodedBytes)
 }

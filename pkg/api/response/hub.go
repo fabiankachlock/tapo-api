@@ -30,3 +30,12 @@ type DeviceInfoHub struct {
 	InAlarm       bool   `json:"in_alarm"`
 	Overheated    bool   `json:"overheated"`
 }
+
+type ChildDeviceList struct {
+	Devices ChildDevice `json:"devices"`
+}
+
+type ChildDevice struct {
+	Type  DefaultPlugStateType `json:"type"`
+	State PlugState            `json:"state"`
+}

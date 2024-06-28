@@ -1,6 +1,8 @@
 package response
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 const (
 	ResponseOk              = 0

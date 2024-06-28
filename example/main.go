@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -22,9 +21,17 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	info, err := device.GetDeviceInfo()
-	fmt.Println("Device Info:")
-	fmt.Println(err)
-	json, _ := json.MarshalIndent(info, "", "  ")
-	fmt.Println(string(json))
+	devices, _ := device.GetChildDeviceList()
+	for _, device := range devices {
+		model, _ := device.GetModel()
+		if model == "T315" {
+			info, _ := device.AsT315()
+			fmt.Printf("device: %s tmp: %.2f hum: %d\n", tapo.GetNickname(info.Nickname), info.CurrentTemperatur, info.CurrentHumidity)
+		}
+	}
+	// info, err := device.GetDeviceInfo()
+	// fmt.Println("Device Info:")
+	// fmt.Println(err)
+	// json, _ := json.MarshalIndent(info, "", "  ")
+	// fmt.Println(string(json))
 }
