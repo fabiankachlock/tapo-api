@@ -31,11 +31,13 @@ type DeviceInfoHub struct {
 	Overheated    bool   `json:"overheated"`
 }
 
-type ChildDeviceList struct {
-	Devices ChildDevice `json:"devices"`
+type ChildDeviceComponentList struct {
+	Devices []ChildDeviceComponent
+	Start   int32
+	Sum     uint32
 }
 
-type ChildDevice struct {
-	Type  DefaultPlugStateType `json:"type"`
-	State PlugState            `json:"state"`
+type ChildDeviceComponent struct {
+	Id      string
+	VerCode int
 }

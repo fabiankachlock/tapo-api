@@ -1,9 +1,8 @@
 package tapo
 
 import (
-	"encoding/base64"
-
 	"github.com/fabiankachlock/tapo-api/pkg/devices"
+	tapoutil "github.com/fabiankachlock/tapo-api/pkg/util"
 )
 
 // TapoClient is the main struct to interact with the Tapo API
@@ -38,9 +37,5 @@ func (t TapoClient) H200(ip string) (*devices.TapoHub, error) {
 }
 
 func GetNickname(nickname string) string {
-	decodedBytes, err := base64.StdEncoding.DecodeString(nickname)
-	if err != nil {
-		return nickname
-	}
-	return string(decodedBytes)
+	return tapoutil.GetNickname(nickname)
 }
