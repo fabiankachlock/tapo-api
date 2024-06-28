@@ -22,3 +22,13 @@ func (t TapoClient) P110(ip string) (*devices.TapoEnergyMonitoringPlug, error) {
 func (t TapoClient) P115(ip string) (*devices.TapoEnergyMonitoringPlug, error) {
 	return devices.NewP115(ip, t.username, t.password)
 }
+
+// H100 creates a new Tapo H100 device
+func (t TapoClient) H100(ip string) (*devices.TapoHub, error) {
+	return devices.NewH100(ip, t.username, t.password)
+}
+
+// H200 creates a new Tapo H200 device
+func (t TapoClient) H200(ip string) (*devices.TapoHub, error) {
+	return devices.NewH200(ip, t.username, t.password)
+}
