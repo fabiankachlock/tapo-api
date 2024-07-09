@@ -4,7 +4,7 @@ type DeviceInfoT31X struct {
 	// Common properties to all Hub child devices.
 	AtLowBattery       bool   `json:"at_low_battery"`
 	Avatar             string `json:"avatar"`
-	BindCOunt          uint32 `json:"bind_count"`
+	BindCount          uint32 `json:"bind_count"`
 	Category           string `json:"category"`
 	DeviceId           string `json:"device_id"`
 	FWVersion          string `json:"fw_ver"`
@@ -27,7 +27,7 @@ type DeviceInfoT31X struct {
 	CurrentHumidityException    int8    `json:"current_humidity_exception"` // 0 when within comfort zone, otherwise the difference
 	CurrentHumidity             uint8   `json:"current_humidity"`
 	CurrentTemperatureException float32 `json:"current_temp_exception"` // 0 when within comfort zone, otherwise the difference
-	CurrentTemperatur           float32 `json:"current_temp"`
+	CurrentTemperature          float32 `json:"current_temp"`
 
 	LastOnboardingTimestamp uint64 `json:"lastOnboardingTimestamp"`
 
