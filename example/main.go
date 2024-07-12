@@ -21,12 +21,12 @@ func main() {
 		panic(err)
 	}
 
-	// resp, err := client.Request("get_support_alarm_type_list", map[string]interface{}{})
-	resp, err := client.Request("play_alarm", map[string]interface{}{
-		"alarm_duration": 2,
-		"alarm_volume":   "low",
-		"alarm_type":     "Doorbell Ring 2",
-	})
+	resp, err := client.Request("get_support_alarm_type_list", map[string]interface{}{})
+	// resp, err := client.Request("play_alarm", map[string]interface{}{
+	// 	"alarm_duration": 2,
+	// 	"alarm_volume":   "low",
+	// 	"alarm_type":     "Connection 1",
+	// })
 	if err != nil {
 		panic(err)
 	}

@@ -18,6 +18,9 @@ const (
 	RequestMultiple                      = "multipleRequest"
 	RequestGetTriggerLog                 = "get_trigger_logs"
 	RequestGetTemperatureHumidityRecords = "get_temp_humidity_records"
+	RequestSupportedAlarmTypes           = "get_support_alarm_type_list"
+	RequestPlayAlarm                     = "play_alarm"
+	RequestStopAlarm                     = "stop_alarm"
 )
 
 var (

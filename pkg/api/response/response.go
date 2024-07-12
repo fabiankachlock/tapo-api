@@ -2,6 +2,8 @@ package response
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 )
 
 const (
@@ -13,9 +15,24 @@ const (
 	ErrorSessionTimeOut     = 9999
 )
 
+var (
+	ErrNonSuccessfulResponse = errors.New("non successful response")
+)
+
 type TapoResponse[T any] struct {
 	Result    T   `json:"result"`
 	ErrorCode int `json:"error_code"`
+}
+
+func (r TapoResponse[T]) IsOk() bool {
+	return r.ErrorCode == ResponseOk
+}
+
+func (r TapoResponse[T]) GetError() error {
+	if r.ErrorCode == ResponseOk {
+		return nil
+	}
+	return fmt.Errorf("%w: error code: %d", ErrNonSuccessfulResponse, r.ErrorCode)
 }
 
 // UnmarshalResponse unmarshals the response from the Tapo API.
@@ -53,3 +70,5 @@ type EnergyUsage struct {
 type CurrentPower struct {
 	CurrentPower uint64 `json:"current_power"`
 }
+
+type EmptyResponse struct{}

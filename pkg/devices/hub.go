@@ -183,3 +183,30 @@ func (t *TapoHub) GetT300(nicknameOrId string) (bool, childdevices.DeviceInfoT30
 	info, err := device.AsT300()
 	return true, info, err
 }
+
+func (t *TapoHub) GetSupportedAlarms() (response.AlarmsList, error) {
+	resp, err := t.client.Request(request.RequestSupportedAlarmTypes, request.EmptyParams)
+	if err != nil {
+		return response.AlarmsList{}, err
+	}
+
+	data, err := response.UnmarshalResponse[response.AlarmsList](resp)
+	if err != nil {
+		return response.AlarmsList{}, err
+	}
+	return data.Result, nil
+}
+
+func (t *TapoHub) PlayAlarm(alarmType string, volume request.AlarmVolume, duration int) error {
+	_, err := t.client.Request(request.RequestPlayAlarm, request.PlayAlarmParams{
+		Type:     alarmType,
+		Volume:   volume,
+		Duration: duration,
+	})
+	return err
+}
+
+func (t *TapoHub) StopAlarm() error {
+	_, err := t.client.Request(request.RequestStopAlarm, request.EmptyParams)
+	return err
+}
