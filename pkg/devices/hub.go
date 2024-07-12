@@ -52,7 +52,7 @@ func (t *TapoHub) GetDeviceInfo() (response.DeviceInfoHub, error) {
 	if err != nil {
 		return response.DeviceInfoHub{}, err
 	}
-	return data.Result, nil
+	return data.Result, data.GetError()
 }
 
 func (t *TapoHub) GetChildDeviceList() (ChildDeviceList, error) {
@@ -89,7 +89,7 @@ func (t *TapoHub) GetChildDeviceComponentList() (response.ChildDeviceComponentLi
 	if err != nil {
 		return response.ChildDeviceComponentList{}, err
 	}
-	return data.Result, nil
+	return data.Result, data.GetError()
 }
 
 func getChild(by func(ChildDeviceWrapper) (bool, error), devices []ChildDeviceWrapper) (bool, ChildDeviceWrapper, error) {
@@ -194,7 +194,7 @@ func (t *TapoHub) GetSupportedAlarms() (response.AlarmsList, error) {
 	if err != nil {
 		return response.AlarmsList{}, err
 	}
-	return data.Result, nil
+	return data.Result, data.GetError()
 }
 
 func (t *TapoHub) PlayAlarm(alarmType string, volume request.AlarmVolume, duration int) error {

@@ -49,7 +49,7 @@ func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoPlug, err
 	if err != nil {
 		return response.DeviceInfoPlug{}, err
 	}
-	return data.Result, nil
+	return data.Result, data.GetError()
 }
 
 // On turns the device on.
@@ -97,7 +97,7 @@ func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (response.DeviceUsageEnergyM
 	if err != nil {
 		return response.DeviceUsageEnergyMonitor{}, err
 	}
-	return data.Result, nil
+	return data.Result, data.GetError()
 }
 
 // GetEnergyUsage returns the energy usage of the device.
@@ -111,7 +111,7 @@ func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params request.GetEnergyDataPa
 	if err != nil {
 		return response.EnergyUsage{}, err
 	}
-	return data.Result, nil
+	return data.Result, data.GetError()
 }
 
 // GetCurrentPower returns the current power usage of the device.
@@ -125,5 +125,5 @@ func (t *TapoEnergyMonitoringPlug) GetCurrentPower() (response.CurrentPower, err
 	if err != nil {
 		return response.CurrentPower{}, err
 	}
-	return data.Result, nil
+	return data.Result, data.GetError()
 }
