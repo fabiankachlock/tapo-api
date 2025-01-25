@@ -116,7 +116,7 @@ func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params request.GetEnergyDataPa
 
 // GetCurrentPower returns the current power usage of the device.
 func (t *TapoEnergyMonitoringPlug) GetCurrentPower() (response.CurrentPower, error) {
-	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
+	resp, err := t.client.Request(request.RequestGetCurrentPower, request.EmptyParams)
 	if err != nil {
 		return response.CurrentPower{}, err
 	}
