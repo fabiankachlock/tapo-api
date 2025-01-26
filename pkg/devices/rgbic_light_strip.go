@@ -83,22 +83,18 @@ func (t *TapoRgbicLightStrip) GetDeviceUsage() (response.DeviceUsageEnergyMonito
 }
 
 // SetDeviceInfo sets the device information.
-func (t *TapoRgbicLightStrip) SetDeviceInfo(info request.ColorLightDiveInfoParams) error {
-	_, err := t.client.Request(request.RequestSetDeviceInfo, info)
+func (t *TapoRgbicLightStrip) SetDeviceInfo(info request.ColorLightDeviceInfoParams) error {
+	_, err := t.client.Request(request.RequestSetDeviceInfo, info.GetJsonValue())
 	return err
 }
 
 func (t *TapoRgbicLightStrip) On() error {
-	_, err := t.client.Request(request.RequestSetDeviceInfo, request.ColorLightDiveInfoParams{
-		DeviceOn: true,
-	})
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetDeviceOn(true).GetJsonValue())
 	return err
 }
 
 func (t *TapoRgbicLightStrip) Off() error {
-	_, err := t.client.Request(request.RequestSetDeviceInfo, request.ColorLightDiveInfoParams{
-		DeviceOn: false,
-	})
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetDeviceOn(false).GetJsonValue())
 	return err
 }
 
@@ -114,29 +110,21 @@ func (t *TapoRgbicLightStrip) Toggle() error {
 }
 
 func (t *TapoRgbicLightStrip) SetBrightness(brightness uint8) error {
-	_, err := t.client.Request(request.RequestSetDeviceInfo, request.ColorLightDiveInfoParams{
-		Brightness: brightness,
-	})
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetBrightness(brightness).GetJsonValue())
 	return err
 }
 
 func (t *TapoRgbicLightStrip) SetHue(hue uint16) error {
-	_, err := t.client.Request(request.RequestSetDeviceInfo, request.ColorLightDiveInfoParams{
-		Hue: hue,
-	})
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetHue(hue).GetJsonValue())
 	return err
 }
 
 func (t *TapoRgbicLightStrip) SetSaturation(saturation uint16) error {
-	_, err := t.client.Request(request.RequestSetDeviceInfo, request.ColorLightDiveInfoParams{
-		Saturation: saturation,
-	})
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetSaturation(saturation).GetJsonValue())
 	return err
 }
 
 func (t *TapoRgbicLightStrip) SetColorTemperature(colorTemperature uint16) error {
-	_, err := t.client.Request(request.RequestSetDeviceInfo, request.ColorLightDiveInfoParams{
-		ColorTemperature: colorTemperature,
-	})
+	_, err := t.client.Request(request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetColorTemperature(colorTemperature).GetJsonValue())
 	return err
 }
