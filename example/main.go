@@ -5,10 +5,17 @@ import (
 	"os"
 
 	"github.com/fabiankachlock/tapo-api/pkg/api"
+	"github.com/fabiankachlock/tapo-api/pkg/devices"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	tapoIp := "192.168.4.2"
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	tapoIp := "192.168.4.12"
 	tapoEmail := os.Getenv("TAPO_EMAIL")
 	tapoPass := os.Getenv("TAPO_PASS")
 
@@ -21,16 +28,26 @@ func main() {
 		panic(err)
 	}
 
-	resp, err := client.Request("get_support_alarm_type_list", map[string]interface{}{})
+	d, err := devices.NewL930(tapoIp, tapoEmail, tapoPass)
+	if err != nil {
+		panic(err)
+	}
+	resp, err := d.GetDeviceInfo()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%+v", resp)
+
+	// resp, err := client.Request("get_support_alarm_type_list", map[string]interface{}{})
 	// resp, err := client.Request("play_alarm", map[string]interface{}{
 	// 	"alarm_duration": 2,
 	// 	"alarm_volume":   "low",
 	// 	"alarm_type":     "Connection 1",
 	// })
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(resp))
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(string(resp))
 
 	// client := tapo.NewClient(tapoEmail, tapoPass)
 	// device, err := client.H100(tapoIp)
