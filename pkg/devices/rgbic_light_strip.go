@@ -70,7 +70,7 @@ func (t *TapoRgbicLightStrip) GetDeviceInfo() (response.DeviceInfoRgbicLightStri
 
 // GetDeviceUsage returns the device usage.
 func (t *TapoRgbicLightStrip) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
-	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
+	resp, err := t.client.Request(request.RequestGetDeviceUsage, request.EmptyParams)
 	if err != nil {
 		return response.DeviceUsageEnergyMonitor{}, err
 	}

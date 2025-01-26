@@ -88,7 +88,7 @@ func (t *TapoEnergyMonitoringPlug) SetDeviceInfo(info request.PlugDeviceInfoPara
 
 // GetDeviceUsage returns the device usage.
 func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
-	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
+	resp, err := t.client.Request(request.RequestGetDeviceUsage, request.EmptyParams)
 	if err != nil {
 		return response.DeviceUsageEnergyMonitor{}, err
 	}
@@ -102,7 +102,7 @@ func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (response.DeviceUsageEnergyM
 
 // GetEnergyUsage returns the energy usage of the device.
 func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params request.GetEnergyDataParams) (response.EnergyUsage, error) {
-	resp, err := t.client.Request(request.RequestGetDeviceInfo, params)
+	resp, err := t.client.Request(request.RequestGetEnergyUsage, params)
 	if err != nil {
 		return response.EnergyUsage{}, err
 	}
