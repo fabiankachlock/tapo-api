@@ -43,16 +43,7 @@ func (t *TapoHub) RefreshSession() error {
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoHub) GetDeviceInfo() (response.DeviceInfoHub, error) {
-	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
-	if err != nil {
-		return response.DeviceInfoHub{}, err
-	}
-
-	data, err := response.UnmarshalResponse[response.DeviceInfoHub](resp)
-	if err != nil {
-		return response.DeviceInfoHub{}, err
-	}
-	return data.Result, data.GetError()
+	return api.RequestData[response.DeviceInfoHub](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
 }
 
 func (t *TapoHub) GetChildDeviceList() (ChildDeviceList, error) {
@@ -79,17 +70,7 @@ func (t *TapoHub) GetChildDeviceList() (ChildDeviceList, error) {
 }
 
 func (t *TapoHub) GetChildDeviceComponentList() (response.ChildDeviceComponentList, error) {
-	resp, err := t.client.Request(request.RequestGetChildDeviceComponentList, request.EmptyParams)
-	if err != nil {
-		return response.ChildDeviceComponentList{}, err
-	}
-
-	data := response.TapoResponse[response.ChildDeviceComponentList]{}
-	err = json.Unmarshal(resp, &data)
-	if err != nil {
-		return response.ChildDeviceComponentList{}, err
-	}
-	return data.Result, data.GetError()
+	return api.RequestData[response.ChildDeviceComponentList](t.client, request.RequestGetChildDeviceComponentList, request.EmptyParams)
 }
 
 func getChild(by func(ChildDeviceWrapper) (bool, error), devices []ChildDeviceWrapper) (bool, ChildDeviceWrapper, error) {
@@ -185,28 +166,17 @@ func (t *TapoHub) GetT300(nicknameOrId string) (bool, childdevices.DeviceInfoT30
 }
 
 func (t *TapoHub) GetSupportedAlarms() (response.AlarmsList, error) {
-	resp, err := t.client.Request(request.RequestSupportedAlarmTypes, request.EmptyParams)
-	if err != nil {
-		return response.AlarmsList{}, err
-	}
-
-	data, err := response.UnmarshalResponse[response.AlarmsList](resp)
-	if err != nil {
-		return response.AlarmsList{}, err
-	}
-	return data.Result, data.GetError()
+	return api.RequestData[response.AlarmsList](t.client, request.RequestSupportedAlarmTypes, request.EmptyParams)
 }
 
 func (t *TapoHub) PlayAlarm(alarmType string, volume request.AlarmVolume, duration int) error {
-	_, err := t.client.Request(request.RequestPlayAlarm, request.PlayAlarmParams{
+	return api.RequestVoid(t.client, request.RequestPlayAlarm, request.PlayAlarmParams{
 		Type:     alarmType,
 		Volume:   volume,
 		Duration: duration,
 	})
-	return err
 }
 
 func (t *TapoHub) StopAlarm() error {
-	_, err := t.client.Request(request.RequestStopAlarm, request.EmptyParams)
-	return err
+	return api.RequestVoid(t.client, request.RequestStopAlarm, request.EmptyParams)
 }
