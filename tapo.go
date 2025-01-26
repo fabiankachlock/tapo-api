@@ -36,6 +36,21 @@ func (t TapoClient) H200(ip string) (*devices.TapoHub, error) {
 	return devices.NewH200(ip, t.username, t.password)
 }
 
+// L900 creates a new Tapo L900 device
+func (t TapoClient) L900(ip string) (*devices.TapoRgbLightStrip, error) {
+	return devices.NewL900(ip, t.username, t.password)
+}
+
+// L920 creates a new Tapo L920 device
+func (t TapoClient) L920(ip string) (*devices.TapoRgbicLightStrip, error) {
+	return devices.NewL920(ip, t.username, t.password)
+}
+
+// L930 creates a new Tapo L930 device
+func (t TapoClient) L930(ip string) (*devices.TapoRgbicLightStrip, error) {
+	return devices.NewL930(ip, t.username, t.password)
+}
+
 func GetNickname(nickname string) string {
 	return tapoutil.GetNickname(nickname)
 }
