@@ -52,18 +52,33 @@ func (t TapoClient) L930(ip string) (*devices.TapoRgbicLightStrip, error) {
 }
 
 // L510 creates a new Tapo L510 device
-func (t TapoClient) NewL510(ip string) (*devices.TapoLight, error) {
+func (t TapoClient) L510(ip string) (*devices.TapoLight, error) {
 	return devices.NewL510(ip, t.username, t.password)
 }
 
 // L520 creates a new Tapo L520 device
-func (t TapoClient) NewL520(ip string) (*devices.TapoLight, error) {
+func (t TapoClient) L520(ip string) (*devices.TapoLight, error) {
 	return devices.NewL520(ip, t.username, t.password)
 }
 
 // L610 creates a new Tapo L610 device
-func (t TapoClient) NewL610(ip string) (*devices.TapoLight, error) {
+func (t TapoClient) L610(ip string) (*devices.TapoLight, error) {
 	return devices.NewL610(ip, t.username, t.password)
+}
+
+// L530 creates a new Tapo L530 device
+func (t TapoClient) L530(ip string) (*devices.TapoColorLight, error) {
+	return devices.NewL530(ip, t.username, t.password)
+}
+
+// L535 creates a new Tapo L535 device
+func (t TapoClient) L535(ip string) (*devices.TapoColorLight, error) {
+	return devices.NewL535(ip, t.username, t.password)
+}
+
+// L630 creates a new Tapo L630 device
+func (t TapoClient) L630(ip string) (*devices.TapoColorLight, error) {
+	return devices.NewL630(ip, t.username, t.password)
 }
 
 // GetNickname decodes a nickname of a device

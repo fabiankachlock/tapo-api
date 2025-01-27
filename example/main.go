@@ -16,7 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	tapoIp := "192.168.4.12"
+	tapoIp := "192.168.4.21"
 	tapoEmail := os.Getenv("TAPO_EMAIL")
 	tapoPass := os.Getenv("TAPO_PASS")
 
@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 
-	d, err := devices.NewL930(tapoIp, tapoEmail, tapoPass)
+	d, err := devices.NewL535(tapoIp, tapoEmail, tapoPass)
 	if err != nil {
 		panic(err)
 	}
