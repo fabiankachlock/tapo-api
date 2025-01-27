@@ -52,6 +52,12 @@ Supported Devices:
 - L900
 - L920
 - L930 (tested)
+- L510
+- L520
+- L530
+- L535 (tested)
+- L610
+- L630
 
 Supported Protocols:
 - KLAP 
@@ -67,22 +73,23 @@ Supported Protocols:
 | get_child_device_list                |                              |                        |                             |                     |                         |                         |                         |         &check;         |        &#x2705;         |
 | get_child_device_list_json           |                              |                        |                             |                     |                         |                         |                         |         &check;         |         &check;         |
 | get_current_power                    |                              |                        |                             |                     |                         |                         |       &#x2705;\*        |                         |                         |
-| get_device_info                      |           &check;            |        &check;         |           &check;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |         &check;         |        &#x2705;         |
+| get_device_info                      |           &check;            |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |         &check;         |        &#x2705;         |
 | get_device_info_json                 |           &check;            |        &check;         |           &check;           |       &check;       |         &check;         |         &check;         |         &check;         |         &check;         |         &check;         |
-| get_device_usage                     |                              |        &check;         |           &check;           |      &#x2705;       |        &#x2705;         |         &check;         |       &#x2705;\*        |                         |                         |
+| get_device_usage                     |                              |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |         &check;         |       &#x2705;\*        |                         |                         |
 | get_energy_data                      |                              |                        |                             |                     |                         |                         |         &check;         |                         |                         |
 | get_energy_usage                     |                              |                        |                             |                     |                         |                         |       &#x2705;\*        |                         |                         |
 | get_supported_ringtone_list          |                              |                        |                             |                     |                         |                         |                         |                         |       &#x2705;\*        |
-| off                                  |           &check;            |        &check;         |           &check;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |                         |                         |
-| on                                   |           &check;            |        &check;         |           &check;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |                         |                         |
+| off                                  |           &check;            |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |                         |                         |
+| on                                   |           &check;            |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |                         |                         |
+| toggle (go only)                     |           &check;            |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |        &#x2705;         |                         |                         |
 | play_alarm                           |                              |                        |                             |                     |                         |                         |                         |                         |       &#x2705;\*        |
-| refresh_session                      |           &check;            |        &check;         |           &check;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |         &check;         |        &#x2705;         |
-| set_brightness                       |                              |        &check;         |           &check;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
+| refresh_session                      |           &check;            |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |         &check;         |        &#x2705;         |         &check;         |        &#x2705;         |
+| set_brightness                       |                              |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
 | set_color                            |                              |                        |           &check;           |       &check;       |         &check;         |                         |                         |                         |                         |
-| set_color_temperature                |                              |                        |           &check;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
-| set_hue_saturation                   |                              |                        |           &check;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
+| set_color_temperature                |                              |                        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
+| set_hue_saturation                   |                              |                        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
 | set_lighting_effect                  |                              |                        |                             |                     |         &check;         |                         |                         |                         |                         |
-| set() API \*                         |                              |                        |           &check;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
+| set() API \*                         |                              |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
 | stop_alarm                           |                              |                        |                             |                     |                         |                         |                         |                         |       &#x2705;\*        |
 
 
