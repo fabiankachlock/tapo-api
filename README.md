@@ -99,8 +99,8 @@ Supported Protocols:
 
 ## Hub (H100) Child Devices Support
 
-&check; - Rust only\
-&check; - Rust and Python
+&#x2705; - Implemented \
+&check; - Supported by reference implementation in rust
 
 | Feature<br/><br/>                | KE100<br/><br/> | S200B<br/><br/> | T100<br/><br/> | T110<br/><br/> | T300<br/><br/> | T310<br/>T315 |
 | -------------------------------- | :-------------: | :-------------: | :------------: | :------------: | :------------: | :-----------: |
