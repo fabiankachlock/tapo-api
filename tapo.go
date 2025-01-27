@@ -16,6 +16,11 @@ func NewClient(username, password string) TapoClient {
 	return TapoClient{username, password}
 }
 
+// Generic creates a new generic Tapo device
+func (t TapoClient) Generic(ip string) (*devices.TapoGenericDevice, error) {
+	return devices.NewGenericDevice(ip, t.username, t.password)
+}
+
 // P100 creates a new Tapo P100 device
 func (t TapoClient) P110(ip string) (*devices.TapoEnergyMonitoringPlug, error) {
 	return devices.NewP110(ip, t.username, t.password)
