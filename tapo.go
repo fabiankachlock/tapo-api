@@ -21,6 +21,26 @@ func (t TapoClient) Generic(ip string) (*devices.TapoGenericDevice, error) {
 	return devices.NewGenericDevice(ip, t.username, t.password)
 }
 
+// Light creates a new Tapo light device
+func (t TapoClient) Light(ip string) (*devices.TapoLight, error) {
+	return devices.NewLight(ip, t.username, t.password)
+}
+
+// ColorLight creates a new Tapo color light device
+func (t TapoClient) ColorLight(ip string) (*devices.TapoColorLight, error) {
+	return devices.NewColorLight(ip, t.username, t.password)
+}
+
+// RgbLightStrip creates a new Tapo RGB light strip device
+func (t TapoClient) RgbLightStrip(ip string) (*devices.TapoRgbLightStrip, error) {
+	return devices.NewRgbLightStrip(ip, t.username, t.password)
+}
+
+// RgbicLightStrip creates a new Tapo RGBIC light strip device
+func (t TapoClient) RgbicLightStrip(ip string) (*devices.TapoRgbicLightStrip, error) {
+	return devices.NewRgbicLightStrip(ip, t.username, t.password)
+}
+
 // P100 creates a new Tapo P100 device
 func (t TapoClient) P110(ip string) (*devices.TapoEnergyMonitoringPlug, error) {
 	return devices.NewP110(ip, t.username, t.password)

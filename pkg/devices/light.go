@@ -15,8 +15,7 @@ type TapoLight struct {
 	client *api.ApiClient
 }
 
-// NewL510 creates a new Tapo L510 device.
-func NewL510(ip, email, password string) (*TapoLight, error) {
+func NewLight(ip, email, password string) (*TapoLight, error) {
 	client, err := api.NewClient(ip, email, password)
 	if err != nil {
 		return nil, err
@@ -30,40 +29,21 @@ func NewL510(ip, email, password string) (*TapoLight, error) {
 	return &TapoLight{
 		client: client,
 	}, err
+}
+
+// NewL510 creates a new Tapo L510 device.
+func NewL510(ip, email, password string) (*TapoLight, error) {
+	return NewLight(ip, email, password)
 }
 
 // NewL520 creates a new Tapo L520 device.
 func NewL520(ip, email, password string) (*TapoLight, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
-	if err != nil {
-		return nil, err
-	}
-
-	return &TapoLight{
-		client: client,
-	}, err
+	return NewLight(ip, email, password)
 }
 
 // NewL610 creates a new Tapo L610 device.
 func NewL610(ip, email, password string) (*TapoLight, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
-	if err != nil {
-		return nil, err
-	}
-
-	return &TapoLight{
-		client: client,
-	}, err
+	return NewLight(ip, email, password)
 }
 
 func (t *TapoLight) RefreshSession() error {
@@ -81,25 +61,31 @@ func (t *TapoLight) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) 
 	return api.RequestData[response.DeviceUsageEnergyMonitor](t.client, request.RequestGetDeviceUsage, request.EmptyParams)
 }
 
+// SetDeviceInfo sets the device information.
+func (t *TapoLight) SetDeviceInfo(info request.LightDeviceInfoParams) error {
+	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, info.GetJsonValue())
+}
+
+// On turns the device on.
 func (t *TapoLight) On() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewLightDeviceInfoParams().SetDeviceOn(true).GetJsonValue())
+	return t.SetDeviceInfo(request.NewLightDeviceInfoParams().SetDeviceOn(true))
 }
 
+// Off turns the device off.
 func (t *TapoLight) Off() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewLightDeviceInfoParams().SetDeviceOn(false).GetJsonValue())
+	return t.SetDeviceInfo(request.NewLightDeviceInfoParams().SetDeviceOn(false))
 }
 
+// Toggle toggles the device state between on and off.
 func (t *TapoLight) Toggle() error {
 	state, err := t.GetDeviceInfo()
 	if err != nil {
 		return err
 	}
-	if state.DeviceOn {
-		return t.Off()
-	}
-	return t.On()
+	return t.SetDeviceInfo(request.NewLightDeviceInfoParams().SetDeviceOn(!state.DeviceOn))
 }
 
+// SetBrightness sets the brightness of the light.
 func (t *TapoLight) SetBrightness(brightness uint8) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewLightDeviceInfoParams().SetBrightness(brightness).GetJsonValue())
+	return t.SetDeviceInfo(request.NewLightDeviceInfoParams().SetBrightness(brightness))
 }

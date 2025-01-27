@@ -14,8 +14,8 @@ type TapoRgbicLightStrip struct {
 	client *api.ApiClient
 }
 
-// NewL920 creates a new Tapo L920 device.
-func NewL920(ip, email, password string) (*TapoRgbicLightStrip, error) {
+// NewRgbicLightStrip creates a new Tapo RGBIC light strip device.
+func NewRgbicLightStrip(ip, email, password string) (*TapoRgbicLightStrip, error) {
 	client, err := api.NewClient(ip, email, password)
 	if err != nil {
 		return nil, err
@@ -31,21 +31,14 @@ func NewL920(ip, email, password string) (*TapoRgbicLightStrip, error) {
 	}, err
 }
 
+// NewL920 creates a new Tapo L920 device.
+func NewL920(ip, email, password string) (*TapoRgbicLightStrip, error) {
+	return NewRgbicLightStrip(ip, email, password)
+}
+
 // NewL930 creates a new Tapo L930 device.
 func NewL930(ip, email, password string) (*TapoRgbicLightStrip, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
-	if err != nil {
-		return nil, err
-	}
-
-	return &TapoRgbicLightStrip{
-		client: client,
-	}, err
+	return NewRgbicLightStrip(ip, email, password)
 }
 
 // RefreshSession refreshes the authentication session of the client.
@@ -69,37 +62,41 @@ func (t *TapoRgbicLightStrip) SetDeviceInfo(info request.ColorLightDeviceInfoPar
 	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, info.GetJsonValue())
 }
 
+// On turns the device on.
 func (t *TapoRgbicLightStrip) On() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetDeviceOn(true).GetJsonValue())
+	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetDeviceOn(true))
 }
 
+// Off turns the device off.
 func (t *TapoRgbicLightStrip) Off() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetDeviceOn(false).GetJsonValue())
+	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetDeviceOn(false))
 }
 
+// Toggle toggles the device state between on and off.
 func (t *TapoRgbicLightStrip) Toggle() error {
 	state, err := t.GetDeviceInfo()
 	if err != nil {
 		return err
 	}
-	if state.DeviceOn {
-		return t.Off()
-	}
-	return t.On()
+	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetDeviceOn(!state.DeviceOn))
 }
 
+// SetBrightness sets the brightness of the rgbic light strip.
 func (t *TapoRgbicLightStrip) SetBrightness(brightness uint8) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetBrightness(brightness).GetJsonValue())
+	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetBrightness(brightness))
 }
 
+// SetHue sets the hue of the rgbic light strip.
 func (t *TapoRgbicLightStrip) SetHue(hue uint16) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetHue(hue).GetJsonValue())
+	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetHue(hue))
 }
 
+// SetSaturation sets the saturation of the rgbic light strip.
 func (t *TapoRgbicLightStrip) SetSaturation(saturation uint16) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetSaturation(saturation).GetJsonValue())
+	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetSaturation(saturation))
 }
 
+// SetColorTemperature sets the color temperature of the rgbic light strip.
 func (t *TapoRgbicLightStrip) SetColorTemperature(colorTemperature uint16) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetColorTemperature(colorTemperature).GetJsonValue())
+	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetColorTemperature(colorTemperature))
 }
