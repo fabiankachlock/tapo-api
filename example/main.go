@@ -33,7 +33,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	err = d.SetDeviceInfo(request.NewColorLightDiveInfoParams().
+	err = d.SetDeviceInfo(request.NewColorLightDeviceInfoParams().
 		SetDeviceOn(true).
 		SetBrightness(20).
 		SetColorTemperature(2800))

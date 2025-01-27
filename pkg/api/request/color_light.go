@@ -7,7 +7,7 @@ type ColorLightDeviceInfoParams struct {
 	jsonValue map[string]interface{}
 }
 
-func NewColorLightDiveInfoParams() ColorLightDeviceInfoParams {
+func NewColorLightDeviceInfoParams() ColorLightDeviceInfoParams {
 	return ColorLightDeviceInfoParams{
 		jsonValue: map[string]interface{}{},
 	}

@@ -51,6 +51,28 @@ func (t TapoClient) L930(ip string) (*devices.TapoRgbicLightStrip, error) {
 	return devices.NewL930(ip, t.username, t.password)
 }
 
+// L510 creates a new Tapo L510 device
+func (t TapoClient) NewL510(ip string) (*devices.TapoLight, error) {
+	return devices.NewL510(ip, t.username, t.password)
+}
+
+// L520 creates a new Tapo L520 device
+func (t TapoClient) NewL520(ip string) (*devices.TapoLight, error) {
+	return devices.NewL520(ip, t.username, t.password)
+}
+
+// L610 creates a new Tapo L610 device
+func (t TapoClient) NewL610(ip string) (*devices.TapoLight, error) {
+	return devices.NewL610(ip, t.username, t.password)
+}
+
+// GetNickname decodes a nickname of a device
 func GetNickname(nickname string) string {
 	return tapoutil.GetNickname(nickname)
+}
+
+// GetSSID decodes an SSID of an device
+func GetSSID(ssid string) string {
+	// nicknames and SSIDs are encoded the same way
+	return tapoutil.GetNickname(ssid)
 }

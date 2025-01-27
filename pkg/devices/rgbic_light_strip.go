@@ -70,11 +70,11 @@ func (t *TapoRgbicLightStrip) SetDeviceInfo(info request.ColorLightDeviceInfoPar
 }
 
 func (t *TapoRgbicLightStrip) On() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetDeviceOn(true).GetJsonValue())
+	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetDeviceOn(true).GetJsonValue())
 }
 
 func (t *TapoRgbicLightStrip) Off() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetDeviceOn(false).GetJsonValue())
+	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetDeviceOn(false).GetJsonValue())
 }
 
 func (t *TapoRgbicLightStrip) Toggle() error {
@@ -89,17 +89,17 @@ func (t *TapoRgbicLightStrip) Toggle() error {
 }
 
 func (t *TapoRgbicLightStrip) SetBrightness(brightness uint8) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetBrightness(brightness).GetJsonValue())
+	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetBrightness(brightness).GetJsonValue())
 }
 
 func (t *TapoRgbicLightStrip) SetHue(hue uint16) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetHue(hue).GetJsonValue())
+	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetHue(hue).GetJsonValue())
 }
 
 func (t *TapoRgbicLightStrip) SetSaturation(saturation uint16) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetSaturation(saturation).GetJsonValue())
+	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetSaturation(saturation).GetJsonValue())
 }
 
 func (t *TapoRgbicLightStrip) SetColorTemperature(colorTemperature uint16) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDiveInfoParams().SetColorTemperature(colorTemperature).GetJsonValue())
+	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.NewColorLightDeviceInfoParams().SetColorTemperature(colorTemperature).GetJsonValue())
 }
