@@ -41,7 +41,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	resp, err := d.GetDeviceUsage()
+	resp, err := d.GetDeviceInfoJSON()
 	if err != nil {
 		panic(err)
 	}

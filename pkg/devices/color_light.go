@@ -52,8 +52,14 @@ func (t *TapoColorLight) RefreshSession() error {
 }
 
 // GetDeviceInfo returns the device information.
+// It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoColorLight) GetDeviceInfo() (response.DeviceInfoColorLight, error) {
 	return api.RequestData[response.DeviceInfoColorLight](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+}
+
+// GetDeviceInfoJSON returns the device information in raw JSON format.
+func (t *TapoColorLight) GetDeviceInfoJSON() (map[string]interface{}, error) {
+	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
 }
 
 // GetDeviceUsage returns the device usage.

@@ -45,6 +45,11 @@ func (t *TapoRgbLightStrip) GetDeviceInfo() (response.DeviceInfoRgbLightStrip, e
 	return api.RequestData[response.DeviceInfoRgbLightStrip](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
 }
 
+// GetDeviceInfoJSON returns the device information in raw JSON format.
+func (t *TapoRgbLightStrip) GetDeviceInfoJSON() (map[string]interface{}, error) {
+	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+}
+
 // GetDeviceUsage returns the device usage.
 func (t *TapoRgbLightStrip) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
 	return api.RequestData[response.DeviceUsageEnergyMonitor](t.client, request.RequestGetDeviceUsage, request.EmptyParams)
