@@ -52,6 +52,11 @@ func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoPlug, err
 	return data.Result, data.GetError()
 }
 
+// GetDeviceInfoJSON returns the device information in raw JSON format.
+func (t *TapoEnergyMonitoringPlug) GetDeviceInfoJSON() (map[string]interface{}, error) {
+	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+}
+
 // On turns the device on.
 func (t *TapoEnergyMonitoringPlug) On() error {
 	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.PlugDeviceInfoParams{
