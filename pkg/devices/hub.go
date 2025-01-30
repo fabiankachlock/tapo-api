@@ -46,6 +46,11 @@ func (t *TapoHub) GetDeviceInfo() (response.DeviceInfoHub, error) {
 	return api.RequestData[response.DeviceInfoHub](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
 }
 
+// GetDeviceInfoJSON returns the device information in raw JSON format.
+func (t *TapoHub) GetDeviceInfoJSON() (map[string]interface{}, error) {
+	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+}
+
 func (t *TapoHub) GetChildDeviceList() (ChildDeviceList, error) {
 	resp, err := t.client.Request(request.RequestGetChildDeviceList, request.EmptyParams)
 	if err != nil {

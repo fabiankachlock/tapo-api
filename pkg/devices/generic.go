@@ -35,8 +35,14 @@ func (t *TapoGenericDevice) RefreshSession() error {
 }
 
 // GetDeviceInfo returns the device information.
+// It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoGenericDevice) GetDeviceInfo() (response.DeviceInfoGeneric, error) {
 	return api.RequestData[response.DeviceInfoGeneric](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+}
+
+// GetDeviceInfoJSON returns the device information in raw JSON format.
+func (t *TapoGenericDevice) GetDeviceInfoJSON() (map[string]interface{}, error) {
+	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
 }
 
 // SetDeviceInfo sets the device information.
