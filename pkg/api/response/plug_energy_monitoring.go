@@ -1,7 +1,7 @@
 package response
 
 // DeviceUsageEnergyMonitor holds information about plug devices.
-type DeviceInfoPlug struct {
+type DeviceInfoPlugEnergyMonitoring struct {
 	// generic properties
 
 	DeviceId           string `json:"device_id"`
@@ -28,5 +28,25 @@ type DeviceInfoPlug struct {
 	Longitude          int64  `json:"longitude"`
 	TimeDiff           int64  `json:"time_diff"`
 	// The time in seconds this device has been ON since the last state change (On/Off).
-	OnTime uint64 `json:"on_time"`
+	OnTime        uint64           `json:"on_time"`
+	Overheated    bool             `json:"overheated"`
+	DefaultStates DefaultPlugState `json:"default_states"`
 }
+
+// DefaultPlugState holds information about the default state of the plug device.
+type DefaultPlugState struct {
+	Type  DefaultPlugStateType `json:"type"`
+	State PlugState            `json:"state"`
+}
+
+// PlugState holds information about the current state of the plug device.
+type PlugState struct {
+	On bool `json:"on"`
+}
+
+type DefaultPlugStateType string
+
+const (
+	DefaultPlugStateTypeCustom     DefaultPlugStateType = "custom"
+	DefaultPlugStateLastTypeStates DefaultPlugStateType = "last_states"
+)
