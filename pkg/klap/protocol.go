@@ -24,7 +24,7 @@ type KLAPProtocol struct {
 func NewProtocol() (*KLAPProtocol, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create cookie jar: %w", err)
+		return nil, fmt.Errorf("klap protocol: failed to create cookie jar: %w", err)
 	}
 
 	client := &KLAPProtocol{
@@ -48,12 +48,12 @@ func (p *KLAPProtocol) handshake(url, username, password string) error {
 		return fmt.Errorf("failed to generate local seed: %w", err)
 	}
 
-	remoteSeed, err := p.handshake1(p.url, localSeed, authHash[:])
+	remoteSeed, err := p.handshake1(url, localSeed, authHash[:])
 	if err != nil {
 		return fmt.Errorf("handshake1 failed: %w", err)
 	}
 
-	err = p.handshake2(p.url, localSeed, remoteSeed, authHash[:])
+	err = p.handshake2(url, localSeed, remoteSeed, authHash[:])
 	if err != nil {
 		return fmt.Errorf("handshake2 failed: %w", err)
 	}
@@ -99,7 +99,11 @@ func (p *KLAPProtocol) handshake2(url string, localSeed, remoteSeed, authHash []
 }
 
 func (d *KLAPProtocol) Login(url, username, password string) error {
-	return d.handshake(url, username, password)
+	err := d.handshake(url, username, password)
+	if err != nil {
+		return fmt.Errorf("login failed: %w", err)
+	}
+	return nil
 }
 
 func (d *KLAPProtocol) RefreshSession(username, password string) error {
@@ -112,7 +116,11 @@ func (d *KLAPProtocol) RefreshSession(username, password string) error {
 		Jar: jar,
 	}
 
-	return d.handshake(d.url, username, password)
+	err = d.handshake(d.url, username, password)
+	if err != nil {
+		return fmt.Errorf("failed to refresh session: %w", err)
+	}
+	return nil
 }
 
 // Request sends a request to the Tapo API.

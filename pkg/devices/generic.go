@@ -13,20 +13,15 @@ type TapoGenericDevice struct {
 }
 
 // NewGenericDevice create a handler for a generic Tapo device.
-func NewGenericDevice(ip, email, password string) (*TapoGenericDevice, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
+func NewGenericDevice(ip string, client api.ApiClient) (*TapoGenericDevice, error) {
+	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoGenericDevice{
-		client: client,
-	}, err
+		client: &client,
+	}, nil
 }
 
 // RefreshSession refreshes the authentication session of the client.

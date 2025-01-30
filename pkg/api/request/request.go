@@ -26,3 +26,10 @@ const (
 var (
 	EmptyParams = map[string]interface{}{}
 )
+
+type TapoRequest struct {
+	Method       string                 `json:"method"`
+	Params       map[string]interface{} `json:"params"`
+	RequestTime  int64                  `json:"requestTimeMilis"`
+	TerminalUUID string                 `json:"terminalUUID"`
+}

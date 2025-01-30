@@ -32,7 +32,7 @@ func ivDerive(localHash []byte) (iv []byte, seq int32) {
 	localHash = append([]byte("iv"), localHash...)
 	shaSum := sha256.Sum256(localHash)
 	iv = shaSum[:12]
-	seq = int32(binary.BigEndian.Uint32(iv[12:]))
+	seq = int32(binary.BigEndian.Uint32(shaSum[12:]))
 	return
 }
 
@@ -88,6 +88,7 @@ func (c *KLAPCipher) Decrypt(data []byte) ([]byte, error) {
 
 	// decrypt data
 	cbc := cipher.NewCBCDecrypter(block, c.ivSeq(c.seq))
+	// TODO: panic: runtime error: makeslice: len out of range
 	realBytes := make([]byte, len(data)-32)
 	cbc.CryptBlocks(realBytes, data[32:])
 

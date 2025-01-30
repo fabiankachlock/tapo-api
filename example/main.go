@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/fabiankachlock/tapo-api/pkg/api"
-	"github.com/fabiankachlock/tapo-api/pkg/api/request"
-	"github.com/fabiankachlock/tapo-api/pkg/devices"
+	"github.com/fabiankachlock/tapo-api/pkg/api/response"
+	"github.com/fabiankachlock/tapo-api/pkg/klap"
 	"github.com/joho/godotenv"
 )
 
@@ -20,38 +20,53 @@ func main() {
 	tapoEmail := os.Getenv("TAPO_EMAIL")
 	tapoPass := os.Getenv("TAPO_PASS")
 
-	client, err := api.NewClient(tapoIp, tapoEmail, tapoPass)
-	if err != nil {
-		panic(err)
-	}
-	err = client.Login()
+	protocol, err := klap.NewProtocol()
 	if err != nil {
 		panic(err)
 	}
 
-	d, err := devices.NewL535(tapoIp, tapoEmail, tapoPass)
+	client := api.NewClient(tapoEmail, tapoPass, protocol)
+	err = client.Login(tapoIp)
 	if err != nil {
 		panic(err)
 	}
-	err = d.SetDeviceInfo(request.NewColorLightDeviceInfoParams().
-		SetDeviceOn(true).
-		SetBrightness(20).
-		SetColorTemperature(2800))
 
-	if err != nil {
-		panic(err)
-	}
-	resp, err := d.GetDeviceInfoJSON()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%+v", resp)
-
-	// resps, err := client.Request("get_device_info", map[string]interface{}{})
+	// d, err := devices.NewL535(tapoIp, tapoEmail, tapoPass)
 	// if err != nil {
 	// 	panic(err)
 	// }
-	// fmt.Println(string(resps))
+	// err = d.SetDeviceInfo(request.NewColorLightDeviceInfoParams().
+	// 	SetDeviceOn(true).
+	// 	SetBrightness(20).
+	// 	SetColorTemperature(2800))
+
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// resp, err := d.GetDeviceInfoJSON()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("%+v", resp)
+
+	resp, err := client.Request("get_device_info", map[string]interface{}{}, true)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(resp.Raw()))
+	resp1 := response.TapoResponse[response.DeviceInfoLight]{}
+	err = resp.UnmarshalRaw(&resp1)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%+v\n", resp1)
+
+	resp2 := response.DeviceInfoLight{}
+	_, err = resp.UnmarshalResponse(&resp2)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%+v\n", resp2.Avatar)
 
 	// resp, err := client.Request("play_alarm", map[string]interface{}{
 	// 	"alarm_duration": 2,

@@ -1,94 +1,51 @@
 package api
 
 import (
-	"bytes"
-	"crypto/rand"
-	"crypto/sha1"
-	"crypto/sha256"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"log"
-	"net"
-	"net/http"
-	"net/http/cookiejar"
 	"time"
 
-	"github.com/fabiankachlock/tapo-api/pkg/klap"
+	"github.com/fabiankachlock/tapo-api/pkg/api/response"
 )
+
+const TerminalUUID = "00-00-00-00-00-00"
 
 // ApiClient is the main struct to interact with the raw Tapo API.
 type ApiClient struct {
-	Ip          net.IP
-	Email       string
-	Password    string
-	HandshakeTS time.Time
-	url         string
-	client      *http.Client
-	cipher      *klap.KLAPCipher
-	cookieJar   *cookiejar.Jar
+	username string
+	password string
+	protocol Protocol
 }
 
 // NewClient creates a new ApiClient.
-func NewClient(ip, email, password string) (*ApiClient, error) {
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, err
+func NewClient(email, password string, protocol Protocol) ApiClient {
+	return ApiClient{
+		username: email,
+		password: password,
+		protocol: protocol,
 	}
-
-	client := &ApiClient{
-		Ip:        net.ParseIP(ip),
-		Email:     email,
-		Password:  password,
-		url:       fmt.Sprintf("http://%s/app", ip),
-		cookieJar: jar,
-		client: &http.Client{
-			Jar: jar,
-		},
-	}
-
-	return client, nil
 }
 
 // Login logs in to the Tapo API.
-func (d *ApiClient) Login() error {
-	hashedUsername := sha1.Sum([]byte(d.Email))
-	hashedPassword := sha1.Sum([]byte(d.Password))
-	authHash := sha256.Sum256(append(hashedUsername[:], hashedPassword[:]...))
-
-	localSeed := make([]byte, 16)
-	rand.Read(localSeed)
-
-	remoteSeed, err := d.handshake1(d.url, localSeed, authHash[:])
+func (d *ApiClient) Login(ip string) error {
+	url := fmt.Sprintf("http://%s/app", ip)
+	err := d.protocol.Login(url, d.username, d.password)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to login: %w", err)
 	}
-
-	err = d.handshake2(d.url, localSeed, remoteSeed, authHash[:])
-	if err != nil {
-		return err
-	}
-
-	d.cipher = klap.NewCipher(localSeed, remoteSeed, authHash[:])
 	return nil
 }
 
 // RefreshSession refreshes the authentication session of the client.
 func (d *ApiClient) RefreshSession() error {
-	// clear cookies
-	jar, err := cookiejar.New(nil)
+	err := d.protocol.RefreshSession(d.username, d.password)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to refresh session: %w", err)
 	}
-	d.client = &http.Client{
-		Jar: jar,
-	}
-
-	return d.Login()
+	return nil
 }
 
-// Request sends a request to the Tapo API.
-func (d *ApiClient) Request(method string, params interface{}) ([]byte, error) {
+func (d *ApiClient) RequestRaw(method string, params interface{}, withToken bool) ([]byte, error) {
 	request := map[string]interface{}{
 		"method":           method,
 		"params":           params,
@@ -97,57 +54,20 @@ func (d *ApiClient) Request(method string, params interface{}) ([]byte, error) {
 	}
 	requestData, err := json.Marshal(request)
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, fmt.Errorf("failed to marshal request: %w", err)
 	}
 
-	payload, seq, err := d.cipher.Encrypt(requestData)
+	response, err := d.protocol.ExecuteRequest(requestData, withToken)
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, fmt.Errorf("failed to execute request: %w", err)
 	}
-
-	resp, err := d.client.Post(fmt.Sprintf("%s/request?seq=%d", d.url, seq), "application/x-www-form-urlencoded", bytes.NewReader(payload))
-	if err != nil {
-		return []byte{}, err
-	}
-
-	buf := make([]byte, resp.ContentLength)
-	resp.Body.Read(buf)
-	decrypted, err := d.cipher.Decrypt(seq, buf)
-	if err != nil {
-		return []byte{}, err
-	}
-
-	return decrypted, nil
+	return response, nil
 }
 
-func (d *ApiClient) handshake1(url string, localSeed []byte, authHash []byte) ([]byte, error) {
-	resp, err := d.client.Post(fmt.Sprintf("%s/handshake1", url), "application/x-www-form-urlencoded", bytes.NewReader(localSeed))
+func (d *ApiClient) Request(method string, params interface{}, withToken bool) (response.GenericResponse, error) {
+	raw, err := d.RequestRaw(method, params, withToken)
 	if err != nil {
-		return []byte{}, err
+		return response.GenericResponse{}, err
 	}
-
-	buf := make([]byte, resp.ContentLength)
-	resp.Body.Read(buf)
-	remoteSeed := buf[0:16]
-	serverHash := buf[16:]
-	localHash := sha256.Sum256(append(append(localSeed, remoteSeed...), authHash...))
-
-	if string(localHash[:]) != string(serverHash) {
-		return []byte{}, errors.New("hashes dont match")
-	}
-	return remoteSeed, nil
-}
-
-func (d *ApiClient) handshake2(url string, localSeed, remoteSeed, authHash []byte) error {
-	payload := sha256.Sum256(append(append(remoteSeed, localSeed...), authHash...))
-	resp, err := d.client.Post(fmt.Sprintf("%s/handshake2", url), "application/x-www-form-urlencoded", bytes.NewReader(payload[:]))
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		log.Println(resp.Status)
-		return errors.New("handshake 2 failed")
-	}
-	return nil
+	return response.NewGenericResponse(raw), nil
 }

@@ -14,30 +14,25 @@ type TapoPlug struct {
 	client *api.ApiClient
 }
 
-func NewPlug(ip, email, password string) (*TapoPlug, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
+func NewPlug(ip string, client api.ApiClient) (*TapoPlug, error) {
+	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoPlug{
-		client: client,
-	}, err
+		client: &client,
+	}, nil
 }
 
 // NewP100 creates a new Tapo P100 device.
-func NewP100(ip, email, password string) (*TapoPlug, error) {
-	return NewPlug(ip, email, password)
+func NewP100(ip string, client api.ApiClient) (*TapoPlug, error) {
+	return NewPlug(ip, client)
 }
 
 // NewP105 creates a new Tapo P105 device.
-func NewP105(ip, email, password string) (*TapoPlug, error) {
-	return NewPlug(ip, email, password)
+func NewP105(ip string, client api.ApiClient) (*TapoPlug, error) {
+	return NewPlug(ip, client)
 }
 
 func (t *TapoPlug) RefreshSession() error {

@@ -17,22 +17,25 @@ type TapoHub struct {
 	client *api.ApiClient
 }
 
-// NewH100 creates a new Tapo H100 device.
-func NewH100(ip, email, password string) (*TapoHub, error) {
-	client, err := api.NewClient(ip, email, password)
-	client.Login()
+func NewHub(ip string, client api.ApiClient) (*TapoHub, error) {
+	err := client.Login(ip)
+	if err != nil {
+		return nil, err
+	}
+
 	return &TapoHub{
-		client: client,
-	}, err
+		client: &client,
+	}, nil
+}
+
+// NewH100 creates a new Tapo H100 device.
+func NewH100(ip string, client api.ApiClient) (*TapoHub, error) {
+	return NewHub(ip, client)
 }
 
 // NewH200 creates a new Tapo H200 device.
-func NewH200(ip, email, password string) (*TapoHub, error) {
-	client, err := api.NewClient(ip, email, password)
-	client.Login()
-	return &TapoHub{
-		client: client,
-	}, err
+func NewH200(ip string, client api.ApiClient) (*TapoHub, error) {
+	return NewHub(ip, client)
 }
 
 // RefreshSession refreshes the authentication session of the client.
@@ -52,13 +55,13 @@ func (t *TapoHub) GetDeviceInfoJSON() (map[string]interface{}, error) {
 }
 
 func (t *TapoHub) GetChildDeviceList() (ChildDeviceList, error) {
-	resp, err := t.client.Request(request.RequestGetChildDeviceList, request.EmptyParams)
+	resp, err := t.client.Request(request.RequestGetChildDeviceList, request.EmptyParams, true)
 	if err != nil {
 		return ChildDeviceList{}, err
 	}
 
 	data := response.TapoResponse[rawDeviceList]{}
-	err = json.Unmarshal(resp, &data)
+	err = json.Unmarshal(resp.Raw(), &data)
 	if err != nil {
 		return ChildDeviceList{}, err
 	}

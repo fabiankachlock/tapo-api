@@ -15,30 +15,25 @@ type TapoRgbicLightStrip struct {
 }
 
 // NewRgbicLightStrip creates a new Tapo RGBIC light strip device.
-func NewRgbicLightStrip(ip, email, password string) (*TapoRgbicLightStrip, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
+func NewRgbicLightStrip(ip string, client api.ApiClient) (*TapoRgbicLightStrip, error) {
+	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoRgbicLightStrip{
-		client: client,
-	}, err
+		client: &client,
+	}, nil
 }
 
 // NewL920 creates a new Tapo L920 device.
-func NewL920(ip, email, password string) (*TapoRgbicLightStrip, error) {
-	return NewRgbicLightStrip(ip, email, password)
+func NewL920(ip string, client api.ApiClient) (*TapoRgbicLightStrip, error) {
+	return NewRgbicLightStrip(ip, client)
 }
 
 // NewL930 creates a new Tapo L930 device.
-func NewL930(ip, email, password string) (*TapoRgbicLightStrip, error) {
-	return NewRgbicLightStrip(ip, email, password)
+func NewL930(ip string, client api.ApiClient) (*TapoRgbicLightStrip, error) {
+	return NewRgbicLightStrip(ip, client)
 }
 
 // RefreshSession refreshes the authentication session of the client.

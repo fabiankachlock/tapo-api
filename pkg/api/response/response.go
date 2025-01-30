@@ -28,6 +28,10 @@ func (r TapoResponse[T]) IsOk() bool {
 	return r.ErrorCode == ResponseOk
 }
 
+func (r TapoResponse[T]) HasError() bool {
+	return r.ErrorCode != ResponseOk
+}
+
 func (r TapoResponse[T]) GetError() error {
 	if r.ErrorCode == ResponseOk {
 		return nil

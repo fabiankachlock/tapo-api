@@ -13,25 +13,20 @@ type TapoRgbLightStrip struct {
 	client *api.ApiClient
 }
 
-func NewRgbLightStrip(ip, email, password string) (*TapoRgbLightStrip, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
+func NewRgbLightStrip(ip string, client api.ApiClient) (*TapoRgbLightStrip, error) {
+	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoRgbLightStrip{
-		client: client,
+		client: &client,
 	}, err
 }
 
 // NewL920 creates a new Tapo L920 device.
-func NewL900(ip, email, password string) (*TapoRgbLightStrip, error) {
-	return NewRgbLightStrip(ip, email, password)
+func NewL900(ip string, client api.ApiClient) (*TapoRgbLightStrip, error) {
+	return NewRgbLightStrip(ip, client)
 }
 
 // RefreshSession refreshes the authentication session of the client.

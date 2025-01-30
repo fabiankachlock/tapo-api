@@ -15,35 +15,30 @@ type TapoColorLight struct {
 	client *api.ApiClient
 }
 
-func NewColorLight(ip, email, password string) (*TapoColorLight, error) {
-	client, err := api.NewClient(ip, email, password)
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Login()
+func NewColorLight(ip string, client api.ApiClient) (*TapoColorLight, error) {
+	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoColorLight{
-		client: client,
-	}, err
+		client: &client,
+	}, nil
 }
 
 // NewL510 creates a new Tapo L510 device.
-func NewL530(ip, email, password string) (*TapoColorLight, error) {
-	return NewColorLight(ip, email, password)
+func NewL530(ip string, client api.ApiClient) (*TapoColorLight, error) {
+	return NewColorLight(ip, client)
 }
 
 // NewL535 creates a new Tapo L535 device.
-func NewL535(ip, email, password string) (*TapoColorLight, error) {
-	return NewColorLight(ip, email, password)
+func NewL535(ip string, client api.ApiClient) (*TapoColorLight, error) {
+	return NewColorLight(ip, client)
 }
 
 // NewL630 creates a new Tapo L630 device.
-func NewL630(ip, email, password string) (*TapoColorLight, error) {
-	return NewColorLight(ip, email, password)
+func NewL630(ip string, client api.ApiClient) (*TapoColorLight, error) {
+	return NewColorLight(ip, client)
 }
 
 // RefreshSession refreshes the authentication session of the client.

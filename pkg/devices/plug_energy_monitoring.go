@@ -15,21 +15,27 @@ type TapoEnergyMonitoringPlug struct {
 }
 
 // NewP110 creates a new Tapo P110 device.
-func NewP110(ip, email, password string) (*TapoEnergyMonitoringPlug, error) {
-	client, err := api.NewClient(ip, email, password)
-	client.Login()
+func NewP110(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
+	err := client.Login(ip)
+	if err != nil {
+		return nil, err
+	}
+
 	return &TapoEnergyMonitoringPlug{
-		client: client,
-	}, err
+		client: &client,
+	}, nil
 }
 
 // NewP115 creates a new Tapo P115 device.
-func NewP115(ip, email, password string) (*TapoEnergyMonitoringPlug, error) {
-	client, err := api.NewClient(ip, email, password)
-	client.Login()
+func NewP115(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
+	err := client.Login(ip)
+	if err != nil {
+		return nil, err
+	}
+
 	return &TapoEnergyMonitoringPlug{
-		client: client,
-	}, err
+		client: &client,
+	}, nil
 }
 
 // RefreshSession refreshes the authentication session of the client.
@@ -40,12 +46,12 @@ func (t *TapoEnergyMonitoringPlug) RefreshSession() error {
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoPlugEnergyMonitoring, error) {
-	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
+	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams, true)
 	if err != nil {
 		return response.DeviceInfoPlugEnergyMonitoring{}, err
 	}
 
-	data, err := response.UnmarshalResponse[response.DeviceInfoPlugEnergyMonitoring](resp)
+	data, err := response.UnmarshalResponse[response.DeviceInfoPlugEnergyMonitoring](resp.Raw())
 	if err != nil {
 		return response.DeviceInfoPlugEnergyMonitoring{}, err
 	}
