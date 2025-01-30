@@ -1,6 +1,6 @@
 package api
 
-// TODO: add withToken to method signature
+// TODO: remove
 func RequestVoid(d *ApiClient, method string, params interface{}) error {
 	_, err := d.Request(method, params, true)
 	return err

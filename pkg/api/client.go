@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/fabiankachlock/tapo-api/pkg/api/request"
 	"github.com/fabiankachlock/tapo-api/pkg/api/response"
 )
 
@@ -26,10 +27,10 @@ func NewClient(email, password string, protocol Protocol) ApiClient {
 	}
 }
 
-// Login logs in to the Tapo API.
-func (d *ApiClient) Login(ip string) error {
+// Login creates a login session with the Tapo device.
+func (c *ApiClient) Login(ip string) error {
 	url := fmt.Sprintf("http://%s/app", ip)
-	err := d.protocol.Login(url, d.username, d.password)
+	err := c.protocol.Login(url, c.username, c.password)
 	if err != nil {
 		return fmt.Errorf("failed to login: %w", err)
 	}
@@ -37,37 +38,100 @@ func (d *ApiClient) Login(ip string) error {
 }
 
 // RefreshSession refreshes the authentication session of the client.
-func (d *ApiClient) RefreshSession() error {
-	err := d.protocol.RefreshSession(d.username, d.password)
+func (c *ApiClient) RefreshSession() error {
+	err := c.protocol.RefreshSession(c.username, c.password)
 	if err != nil {
 		return fmt.Errorf("failed to refresh session: %w", err)
 	}
 	return nil
 }
 
-func (d *ApiClient) RequestRaw(method string, params interface{}, withToken bool) ([]byte, error) {
-	request := map[string]interface{}{
-		"method":           method,
-		"params":           params,
-		"requestTimeMilis": time.Now().UnixMilli(),
-		"terminalUUID":     "00-00-00-00-00-00",
+// RequestRaw sends a request to the device and returns the raw response.
+// The response is not checked for errors.
+//
+// It can be unmarshaled either by wrapping in [response.GenericResponse] or by using the generic [response.UnmarshalResponse[T]] function.
+func (c *ApiClient) RequestRaw(method string, params interface{}, withToken bool) ([]byte, error) {
+	request := request.TapoRequest{
+		Method:       method,
+		Params:       params,
+		RequestTime:  time.Now().UnixMilli(),
+		TerminalUUID: TerminalUUID,
 	}
 	requestData, err := json.Marshal(request)
 	if err != nil {
 		return []byte{}, fmt.Errorf("failed to marshal request: %w", err)
 	}
 
-	response, err := d.protocol.ExecuteRequest(requestData, withToken)
+	response, err := c.protocol.ExecuteRequest(requestData, withToken)
 	if err != nil {
 		return []byte{}, fmt.Errorf("failed to execute request: %w", err)
 	}
 	return response, nil
 }
 
-func (d *ApiClient) Request(method string, params interface{}, withToken bool) (response.GenericResponse, error) {
-	raw, err := d.RequestRaw(method, params, withToken)
+// Request sends a request to the device and returns the response. The response is not checked for errors.
+// It returns a [response.GenericResponse] which can be used for further processing of the response.
+func (c *ApiClient) Request(method string, params interface{}, withToken bool) (response.GenericResponse, error) {
+	raw, err := c.RequestRaw(method, params, withToken)
 	if err != nil {
 		return response.GenericResponse{}, err
 	}
 	return response.NewGenericResponse(raw), nil
+}
+
+// RequestVoid sends a request to the device and returns an error if the response contains an error.
+func (c *ApiClient) RequestVoid(method string, params interface{}, withToken bool) error {
+	resp, err := c.Request(method, params, true)
+	if err != nil {
+		return err
+	}
+
+	// response must be unmarshaled to check for the responses ErrorCode field
+	tapoResponse, err := resp.UnmarshalResponse(struct{}{})
+	if err != nil {
+		return err
+	}
+	if tapoResponse.HasError() {
+		return tapoResponse.GetError()
+	}
+	return nil
+}
+
+// RequestData sends a request to the device and returns the response. The response is checked for errors.
+// The provided response must be a pointer of the expected response type. It will be wrapped within a [response.TapoResponse]
+// representing [response.TapoResponse.Result] to check for errors.
+func (c *ApiClient) RequestData(method string, params interface{}, withToken bool, response interface{}) error {
+	raw, err := c.Request(method, params, true)
+	if err != nil {
+		return err
+	}
+	tapoResponse, err := raw.UnmarshalResponse(&response)
+	if err != nil {
+		return err
+	}
+
+	if tapoResponse.HasError() {
+		return tapoResponse.GetError()
+	}
+	return nil
+}
+
+// GetSupportedAlarmTypes returns a list of supported alarm types by the device.
+func (c *ApiClient) GetSupportedAlarmTypes() (response.SupportedAlarmTypeList, error) {
+	value := response.SupportedAlarmTypeList{}
+	err := c.RequestData(request.RequestSupportedAlarmTypes, request.EmptyParams, true, &value)
+	if err != nil {
+		return response.SupportedAlarmTypeList{}, err
+	}
+	return value, nil
+}
+
+// PlayAlarm plays an alarm on the device.
+func (c *ApiClient) PlayAlarm(params request.PlayAlarmParams) error {
+	return c.RequestVoid(request.RequestPlayAlarm, params.GetJsonValue(), true)
+}
+
+// StopAlarm stops the playing alarm on the device.
+func (c *ApiClient) StopAlarm() error {
+	return c.RequestVoid(request.RequestStopAlarm, request.EmptyParams, true)
 }

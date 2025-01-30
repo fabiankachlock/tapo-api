@@ -28,8 +28,8 @@ var (
 )
 
 type TapoRequest struct {
-	Method       string                 `json:"method"`
-	Params       map[string]interface{} `json:"params"`
-	RequestTime  int64                  `json:"requestTimeMilis"`
-	TerminalUUID string                 `json:"terminalUUID"`
+	Method       string      `json:"method"`
+	Params       interface{} `json:"params"`
+	RequestTime  int64       `json:"requestTimeMilis"`
+	TerminalUUID string      `json:"terminalUUID"`
 }

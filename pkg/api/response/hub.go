@@ -42,6 +42,6 @@ type ChildDeviceComponent struct {
 	VerCode int
 }
 
-type AlarmsList struct {
+type SupportedAlarmTypeList struct {
 	AlarmTypes []string `json:"alarm_type_list"`
 }
