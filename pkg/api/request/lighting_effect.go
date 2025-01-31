@@ -13,7 +13,7 @@ type LightingEffect struct {
 	Brightness         uint8              `json:"brightness"`
 	IsCustom           uint8              `json:"custom"`
 	DisplayColors      [3]uint8           `json:"display_colors"`
-	Enabled            uint8              `json:"enabled"`
+	Enabled            uint8              `json:"enable"`
 	Id                 string             `json:"id"`
 	Name               string             `json:"name"`
 	Type               LightingEffectType `json:"type"`
