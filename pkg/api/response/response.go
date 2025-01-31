@@ -39,6 +39,14 @@ func (r TapoResponse[T]) GetError() error {
 	return fmt.Errorf("%w: error code: %d", ErrNonSuccessfulResponse, r.ErrorCode)
 }
 
+type TapoMultipleResponse[T any] struct {
+	Result TapoMultipleResult[T] `json:"result"`
+}
+
+type TapoMultipleResult[T any] struct {
+	Responses []TapoResponse[T] `json:"responses"`
+}
+
 // UnmarshalResponse unmarshals the response from the Tapo API.
 func UnmarshalResponse[T any](data []byte) (TapoResponse[T], error) {
 	jsonData := TapoResponse[T]{}

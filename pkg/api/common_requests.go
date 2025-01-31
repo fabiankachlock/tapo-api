@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/fabiankachlock/tapo-api/pkg/api/request"
 	"github.com/fabiankachlock/tapo-api/pkg/api/response"
 )
@@ -78,4 +80,49 @@ func GetCurrentPower(c *ApiClient) (response.CurrentPower, error) {
 		return response.CurrentPower{}, err
 	}
 	return value, nil
+}
+
+// GetChildDeviceList returns a list of child devices of the device.
+func GetChildDeviceList[T any](c *ApiClient, params request.ChildDeviceListParams) (T, error) {
+	var value T
+	err := c.RequestData(request.RequestGetChildDeviceList, params.GetJsonValue(), true, &value)
+	if err != nil {
+		return value, err
+	}
+	return value, nil
+}
+
+// GetChildDeviceComponentList returns a list of child device components of the device.
+func GetChildDeviceComponentList[T any](c *ApiClient) (T, error) {
+	var value T
+	err := c.RequestData(request.RequestGetChildDeviceComponentList, request.EmptyParams, true, &value)
+	if err != nil {
+		return value, err
+	}
+	return value, nil
+}
+
+// ControlChild sends a request to a child device of the device.
+func ControlChild[T any](c *ApiClient, deviceId string, childRequest request.TapoRequest) (T, error) {
+	multipleRequestParams := request.NewMultipleRequestParams(childRequest)
+	multipleRequest := request.NewTapoRequest(request.RequestMultiple, multipleRequestParams)
+	controlChildParams := request.NewControlChildParams(deviceId, multipleRequest)
+
+	var zero T
+	var value response.ControlChildResponse[response.TapoMultipleResponse[T]]
+	err := c.RequestData(request.RequestControlChild, controlChildParams, true, &value)
+	if err != nil {
+		return zero, err
+	}
+
+	var responses = value.Response.Result.Responses
+	if len(responses) == 0 {
+		return zero, fmt.Errorf("received an empty response")
+	}
+
+	var targetResponse = responses[0]
+	if targetResponse.HasError() {
+		return zero, targetResponse.GetError()
+	}
+	return targetResponse.Result, nil
 }

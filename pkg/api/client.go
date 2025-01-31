@@ -3,13 +3,10 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/fabiankachlock/tapo-api/pkg/api/request"
 	"github.com/fabiankachlock/tapo-api/pkg/api/response"
 )
-
-const TerminalUUID = "00-00-00-00-00-00"
 
 // ApiClient is the main struct to interact with the raw Tapo API.
 type ApiClient struct {
@@ -51,12 +48,7 @@ func (c *ApiClient) RefreshSession() error {
 //
 // It can be unmarshaled either by wrapping in [response.GenericResponse] or by using the generic [response.UnmarshalResponse[T]] function.
 func (c *ApiClient) RequestRaw(method string, params interface{}, withToken bool) ([]byte, error) {
-	request := request.TapoRequest{
-		Method:       method,
-		Params:       params,
-		RequestTime:  time.Now().UnixMilli(),
-		TerminalUUID: TerminalUUID,
-	}
+	request := request.NewTapoRequest(method, params)
 	requestData, err := json.Marshal(request)
 	if err != nil {
 		return []byte{}, fmt.Errorf("failed to marshal request: %w", err)

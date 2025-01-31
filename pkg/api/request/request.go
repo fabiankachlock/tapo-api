@@ -1,5 +1,9 @@
 package request
 
+import "time"
+
+const TerminalUUID = "00-00-00-00-00-00"
+
 const (
 	RequestComponentNegotiation          = "component_nego"
 	RequestHandshake                     = "handshake"
@@ -33,4 +37,13 @@ type TapoRequest struct {
 	Params       interface{} `json:"params"`
 	RequestTime  int64       `json:"requestTimeMilis"`
 	TerminalUUID string      `json:"terminalUUID"`
+}
+
+func NewTapoRequest(method string, params interface{}) TapoRequest {
+	return TapoRequest{
+		Method:       method,
+		Params:       params,
+		RequestTime:  time.Now().UnixMilli(),
+		TerminalUUID: TerminalUUID,
+	}
 }

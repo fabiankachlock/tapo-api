@@ -7,6 +7,7 @@ BREAKING CHANGES
 - Renamed `RequestGetTriggerLog` to `RequestGetTriggerLogs`
 - Renamed `AlarmVolumeMedium` to `AlarmVolumeNormal`
 - `PlayAlarmParams` must be used via the builder methods how.
+- `EnergyDataParams` must be used via the builder methods how.
 
 
 
