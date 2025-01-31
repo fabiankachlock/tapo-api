@@ -24,4 +24,6 @@ type DeviceInfoGeneric struct {
 	Latitude           int64  `json:"latitude"`
 	Longitude          int64  `json:"longitude"`
 	TimeDiff           int64  `json:"time_diff"`
+	// The time in seconds this device has been ON since the last state change (On/Off).
+	OnTime uint64 `json:"on_time"`
 }

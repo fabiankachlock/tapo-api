@@ -54,17 +54,4 @@ func UnmarshalResponse[T any](data []byte) (TapoResponse[T], error) {
 	return jsonData, err
 }
 
-// DeviceInfoPlug holds information about the device usage.
-type DeviceUsageEnergyMonitor struct {
-	TimeUsage  UsageByPeriod `json:"time_usage"`
-	PowerUsage UsageByPeriod `json:"power_usage"`
-	SavedPower UsageByPeriod `json:"saved_power"`
-}
-
-// UsageByPeriod holds information about the usage of the device by a certain period.
-type UsageByPeriod struct {
-	Today  uint64 `json:"today"`
-	Past7  uint64 `json:"past7"`
-	Past30 uint64 `json:"past30"`
-}
 type EmptyResponse struct{}

@@ -1,5 +1,5 @@
 package response
 
-type DeviceInfoPlug struct {
+type DeviceInfoPowerStrip struct {
 	DeviceInfoGeneric
 }
