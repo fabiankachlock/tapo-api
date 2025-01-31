@@ -39,15 +39,15 @@ func (t *TapoEnergyMonitoringPlug) RefreshSession() error {
 
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
-func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoPlug, error) {
+func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoPlugEnergyMonitoring, error) {
 	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams)
 	if err != nil {
-		return response.DeviceInfoPlug{}, err
+		return response.DeviceInfoPlugEnergyMonitoring{}, err
 	}
 
-	data, err := response.UnmarshalResponse[response.DeviceInfoPlug](resp)
+	data, err := response.UnmarshalResponse[response.DeviceInfoPlugEnergyMonitoring](resp)
 	if err != nil {
-		return response.DeviceInfoPlug{}, err
+		return response.DeviceInfoPlugEnergyMonitoring{}, err
 	}
 	return data.Result, data.GetError()
 }
