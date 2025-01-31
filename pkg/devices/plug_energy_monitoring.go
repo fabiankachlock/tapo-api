@@ -14,8 +14,7 @@ type TapoEnergyMonitoringPlug struct {
 	client *api.ApiClient
 }
 
-// NewP110 creates a new Tapo P110 device.
-func NewP110(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
+func NewEnergyMonitoringPlug(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
 	err := client.Login(ip)
 	if err != nil {
 		return nil, err
@@ -24,57 +23,68 @@ func NewP110(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error)
 	return &TapoEnergyMonitoringPlug{
 		client: &client,
 	}, nil
+}
+
+// NewP110 creates a new Tapo P110 device.
+func NewP110(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
+	return NewEnergyMonitoringPlug(ip, client)
 }
 
 // NewP115 creates a new Tapo P115 device.
 func NewP115(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
-	err := client.Login(ip)
-	if err != nil {
-		return nil, err
-	}
-
-	return &TapoEnergyMonitoringPlug{
-		client: &client,
-	}, nil
+	return NewEnergyMonitoringPlug(ip, client)
 }
 
-// RefreshSession refreshes the authentication session of the client.
 func (t *TapoEnergyMonitoringPlug) RefreshSession() error {
 	return t.client.RefreshSession()
 }
 
+// ResetDevice resets the device to factory defaults.
+func (t *TapoEnergyMonitoringPlug) ResetDevice() error {
+	return api.ResetDevice(t.client)
+}
+
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
-func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoPlugEnergyMonitoring, error) {
-	resp, err := t.client.Request(request.RequestGetDeviceInfo, request.EmptyParams, true)
-	if err != nil {
-		return response.DeviceInfoPlugEnergyMonitoring{}, err
-	}
-
-	data, err := response.UnmarshalResponse[response.DeviceInfoPlugEnergyMonitoring](resp.Raw())
-	if err != nil {
-		return response.DeviceInfoPlugEnergyMonitoring{}, err
-	}
-	return data.Result, data.GetError()
+func (t *TapoEnergyMonitoringPlug) GetDeviceInfo() (response.DeviceInfoEnergyMonitoringPlug, error) {
+	return api.GetDeviceInfo[response.DeviceInfoEnergyMonitoringPlug](t.client)
 }
 
 // GetDeviceInfoJSON returns the device information in raw JSON format.
 func (t *TapoEnergyMonitoringPlug) GetDeviceInfoJSON() (map[string]interface{}, error) {
-	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[map[string]interface{}](t.client)
+}
+
+// GetDeviceUsage returns the device usage.
+func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (response.DeviceUsageEnergyMonitoring, error) {
+	return api.GetDeviceUsage[response.DeviceUsageEnergyMonitoring](t.client)
+}
+
+func (t *TapoEnergyMonitoringPlug) GetEnergyUsage() (response.EnergyUsage, error) {
+	return api.GetEnergyUsage(t.client)
+}
+
+func (t *TapoEnergyMonitoringPlug) GetEnergyData(params request.EnergyDataParams) (response.EnergyData, error) {
+	return api.GetEnergyData(t.client, params)
+}
+
+func (t *TapoEnergyMonitoringPlug) GetCurrentPower() (response.CurrentPower, error) {
+	return api.GetCurrentPower(t.client)
+}
+
+// SetDeviceInfo sets the device information.
+func (t *TapoEnergyMonitoringPlug) SetDeviceInfo(info request.GenericDeviceInfoParams) error {
+	return api.SetDeviceInfo(t.client, info.GetJsonValue())
 }
 
 // On turns the device on.
 func (t *TapoEnergyMonitoringPlug) On() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.PlugDeviceInfoParams{
-		On: true,
-	})
+	return t.SetDeviceInfo(request.NewGenericDeviceInfoParams().SetDeviceOn(true))
 }
 
 // Off turns the device off.
 func (t *TapoEnergyMonitoringPlug) Off() error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, request.PlugDeviceInfoParams{
-		On: false,
-	})
+	return t.SetDeviceInfo(request.NewGenericDeviceInfoParams().SetDeviceOn(false))
 }
 
 // Toggle toggles the device state.
@@ -83,28 +93,6 @@ func (t *TapoEnergyMonitoringPlug) Toggle() error {
 	if err != nil {
 		return err
 	}
-	if state.DeviceOn {
-		return t.Off()
-	}
-	return t.On()
-}
 
-// SetDeviceInfo sets the device information.
-func (t *TapoEnergyMonitoringPlug) SetDeviceInfo(info request.PlugDeviceInfoParams) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, info)
-}
-
-// GetDeviceUsage returns the device usage.
-func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
-	return api.RequestData[response.DeviceUsageEnergyMonitor](t.client, request.RequestGetDeviceUsage, request.EmptyParams)
-}
-
-// GetEnergyUsage returns the energy usage of the device.
-func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params request.EnergyDataParams) (response.EnergyUsage, error) {
-	return api.RequestData[response.EnergyUsage](t.client, request.RequestGetEnergyUsage, params)
-}
-
-// GetCurrentPower returns the current power usage of the device.
-func (t *TapoEnergyMonitoringPlug) GetCurrentPower() (response.CurrentPower, error) {
-	return api.RequestData[response.CurrentPower](t.client, request.RequestGetCurrentPower, request.EmptyParams)
+	return t.SetDeviceInfo(request.NewGenericDeviceInfoParams().SetDeviceOn(!state.DeviceOn))
 }

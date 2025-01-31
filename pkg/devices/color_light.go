@@ -46,25 +46,30 @@ func (t *TapoColorLight) RefreshSession() error {
 	return t.client.RefreshSession()
 }
 
+// ResetDevice resets the device to factory defaults.
+func (t *TapoColorLight) ResetDevice() error {
+	return api.ResetDevice(t.client)
+}
+
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoColorLight) GetDeviceInfo() (response.DeviceInfoColorLight, error) {
-	return api.RequestData[response.DeviceInfoColorLight](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[response.DeviceInfoColorLight](t.client)
 }
 
 // GetDeviceInfoJSON returns the device information in raw JSON format.
 func (t *TapoColorLight) GetDeviceInfoJSON() (map[string]interface{}, error) {
-	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[map[string]interface{}](t.client)
 }
 
 // GetDeviceUsage returns the device usage.
-func (t *TapoColorLight) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
-	return api.RequestData[response.DeviceUsageEnergyMonitor](t.client, request.RequestGetDeviceUsage, request.EmptyParams)
+func (t *TapoColorLight) GetDeviceUsage() (response.DeviceUsageEnergyMonitoring, error) {
+	return api.GetDeviceUsage[response.DeviceUsageEnergyMonitoring](t.client)
 }
 
 // SetDeviceInfo sets the device information.
 func (t *TapoColorLight) SetDeviceInfo(info request.ColorLightDeviceInfoParams) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, info.GetJsonValue())
+	return api.SetDeviceInfo(t.client, info.GetJsonValue())
 }
 
 // On turns the device on.
@@ -86,22 +91,22 @@ func (t *TapoColorLight) Toggle() error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetDeviceOn(!state.DeviceOn))
 }
 
-// SetBrightness sets the brightness of the color light.
+// SetBrightness sets the brightness and turns the device on.
 func (t *TapoColorLight) SetBrightness(brightness uint8) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetBrightness(brightness))
 }
 
-// SetHue sets the hue of the color light.
+// SetHue sets the hue of the and turns the device on.
 func (t *TapoColorLight) SetHue(hue uint16) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetHue(hue))
 }
 
-// SetSaturation sets the saturation of the color light.
+// SetSaturation sets the saturation and turns the device on.
 func (t *TapoColorLight) SetSaturation(saturation uint16) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetSaturation(saturation))
 }
 
-// SetColorTemperature sets the color temperature of the color light.
+// SetColorTemperature sets the color temperature and turns the device on.
 func (t *TapoColorLight) SetColorTemperature(colorTemperature uint16) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetColorTemperature(colorTemperature))
 }

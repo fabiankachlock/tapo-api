@@ -1,7 +1,7 @@
 package response
 
 // DeviceUsageEnergyMonitor holds information about plug devices.
-type DeviceInfoPlugEnergyMonitoring struct {
+type DeviceInfoEnergyMonitoringPlug struct {
 	DeviceInfoGeneric
 
 	DefaultStates         DefaultPlugState      `json:"default_states"`

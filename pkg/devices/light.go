@@ -45,25 +45,30 @@ func (t *TapoLight) RefreshSession() error {
 	return t.client.RefreshSession()
 }
 
+// ResetDevice resets the device to factory defaults.
+func (t *TapoLight) ResetDevice() error {
+	return api.ResetDevice(t.client)
+}
+
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoLight) GetDeviceInfo() (response.DeviceInfoLight, error) {
-	return api.RequestData[response.DeviceInfoLight](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[response.DeviceInfoLight](t.client)
 }
 
 // GetDeviceInfoJSON returns the device information in raw JSON format.
 func (t *TapoLight) GetDeviceInfoJSON() (map[string]interface{}, error) {
-	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[map[string]interface{}](t.client)
 }
 
 // GetDeviceUsage returns the device usage.
-func (t *TapoLight) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
-	return api.RequestData[response.DeviceUsageEnergyMonitor](t.client, request.RequestGetDeviceUsage, request.EmptyParams)
+func (t *TapoLight) GetDeviceUsage() (response.DeviceUsageEnergyMonitoring, error) {
+	return api.GetDeviceUsage[response.DeviceUsageEnergyMonitoring](t.client)
 }
 
 // SetDeviceInfo sets the device information.
 func (t *TapoLight) SetDeviceInfo(info request.LightDeviceInfoParams) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, info.GetJsonValue())
+	return api.SetDeviceInfo(t.client, info.GetJsonValue())
 }
 
 // On turns the device on.
@@ -85,7 +90,7 @@ func (t *TapoLight) Toggle() error {
 	return t.SetDeviceInfo(request.NewLightDeviceInfoParams().SetDeviceOn(!state.DeviceOn))
 }
 
-// SetBrightness sets the brightness of the light.
+// SetBrightness sets the brightness and turns the device on.
 func (t *TapoLight) SetBrightness(brightness uint8) error {
 	return t.SetDeviceInfo(request.NewLightDeviceInfoParams().SetBrightness(brightness))
 }

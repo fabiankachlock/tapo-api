@@ -29,21 +29,25 @@ func (t *TapoGenericDevice) RefreshSession() error {
 	return t.client.RefreshSession()
 }
 
+// ResetDevice resets the device to factory defaults.
+func (t *TapoGenericDevice) ResetDevice() error {
+	return api.ResetDevice(t.client)
+}
+
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoGenericDevice) GetDeviceInfo() (response.DeviceInfoGeneric, error) {
-	return api.RequestData[response.DeviceInfoGeneric](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[response.DeviceInfoGeneric](t.client)
 }
 
 // GetDeviceInfoJSON returns the device information in raw JSON format.
 func (t *TapoGenericDevice) GetDeviceInfoJSON() (map[string]interface{}, error) {
-	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[map[string]interface{}](t.client)
 }
 
 // SetDeviceInfo sets the device information.
-func (t *TapoGenericDevice) SetDeviceInfo(params request.GenericDeviceInfoParams) error {
-	_, err := api.RequestData[response.DeviceInfoGeneric](t.client, request.RequestSetDeviceInfo, params.GetJsonValue())
-	return err
+func (t *TapoGenericDevice) SetDeviceInfo(info request.GenericDeviceInfoParams) error {
+	return api.SetDeviceInfo(t.client, info.GetJsonValue())
 }
 
 // On turns the device on.

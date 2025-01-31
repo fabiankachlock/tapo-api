@@ -128,7 +128,7 @@ func ControlChild[T any](c *ApiClient, deviceId string, childRequest request.Tap
 }
 
 // SetDeviceInfo sets the device information.
-func SetDeviceInfo[T any](c *ApiClient, params map[string]interface{}) error {
+func SetDeviceInfo(c *ApiClient, params map[string]interface{}) error {
 	return c.RequestVoid(request.RequestSetDeviceInfo, params, true)
 }
 

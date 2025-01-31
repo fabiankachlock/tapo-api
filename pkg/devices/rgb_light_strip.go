@@ -34,25 +34,30 @@ func (t *TapoRgbLightStrip) RefreshSession() error {
 	return t.client.RefreshSession()
 }
 
+// ResetDevice resets the device to factory defaults.
+func (t *TapoRgbLightStrip) ResetDevice() error {
+	return api.ResetDevice(t.client)
+}
+
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoRgbLightStrip) GetDeviceInfo() (response.DeviceInfoRgbLightStrip, error) {
-	return api.RequestData[response.DeviceInfoRgbLightStrip](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[response.DeviceInfoRgbLightStrip](t.client)
 }
 
 // GetDeviceInfoJSON returns the device information in raw JSON format.
 func (t *TapoRgbLightStrip) GetDeviceInfoJSON() (map[string]interface{}, error) {
-	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[map[string]interface{}](t.client)
 }
 
 // GetDeviceUsage returns the device usage.
-func (t *TapoRgbLightStrip) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
-	return api.RequestData[response.DeviceUsageEnergyMonitor](t.client, request.RequestGetDeviceUsage, request.EmptyParams)
+func (t *TapoRgbLightStrip) GetDeviceUsage() (response.DeviceUsageEnergyMonitoring, error) {
+	return api.GetDeviceUsage[response.DeviceUsageEnergyMonitoring](t.client)
 }
 
 // SetDeviceInfo sets the device information.
 func (t *TapoRgbLightStrip) SetDeviceInfo(info request.ColorLightDeviceInfoParams) error {
-	return api.RequestVoid(t.client, request.RequestSetDeviceInfo, info.GetJsonValue())
+	return api.SetDeviceInfo(t.client, info.GetJsonValue())
 }
 
 // On turns the device on.
@@ -74,22 +79,26 @@ func (t *TapoRgbLightStrip) Toggle() error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetDeviceOn(!state.DeviceOn))
 }
 
-// SetBrightness sets the brightness of the rgb light strip.
+// SetBrightness sets the brightness and turns the device on.
+// Any pre existing lighting effect will be removed.
 func (t *TapoRgbLightStrip) SetBrightness(brightness uint8) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetBrightness(brightness))
 }
 
-// SetHue sets the hue of the rgb light strip.
+// SetHue sets the hue of the and turns the device on.
+// Any pre existing lighting effect will be removed.
 func (t *TapoRgbLightStrip) SetHue(hue uint16) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetHue(hue))
 }
 
-// SetSaturation sets the saturation of the rgb light strip.
+// SetSaturation sets the saturation and turns the device on.
+// Any pre existing lighting effect will be removed.
 func (t *TapoRgbLightStrip) SetSaturation(saturation uint16) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetSaturation(saturation))
 }
 
-// SetColorTemperature sets the color temperature of the rgb light strip.
+// SetColorTemperature sets the color temperature and turns the device on.
+// Any pre existing lighting effect will be removed.
 func (t *TapoRgbLightStrip) SetColorTemperature(colorTemperature uint16) error {
 	return t.SetDeviceInfo(request.NewColorLightDeviceInfoParams().SetColorTemperature(colorTemperature))
 }

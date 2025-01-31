@@ -39,26 +39,30 @@ func (t *TapoPlug) RefreshSession() error {
 	return t.client.RefreshSession()
 }
 
+// ResetDevice resets the device to factory defaults.
+func (t *TapoPlug) ResetDevice() error {
+	return api.ResetDevice(t.client)
+}
+
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoPlug) GetDeviceInfo() (response.DeviceInfoPlug, error) {
-	return api.RequestData[response.DeviceInfoPlug](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[response.DeviceInfoPlug](t.client)
 }
 
 // GetDeviceInfoJSON returns the device information in raw JSON format.
 func (t *TapoPlug) GetDeviceInfoJSON() (map[string]interface{}, error) {
-	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[map[string]interface{}](t.client)
 }
 
 // GetDeviceUsage returns the device usage.
-func (t *TapoPlug) GetDeviceUsage() (response.DeviceUsageEnergyMonitor, error) {
-	return api.RequestData[response.DeviceUsageEnergyMonitor](t.client, request.RequestGetDeviceUsage, request.EmptyParams)
+func (t *TapoPlug) GetDeviceUsage() (response.DeviceUsage, error) {
+	return api.GetDeviceUsage[response.DeviceUsage](t.client)
 }
 
 // SetDeviceInfo sets the device information.
-func (t *TapoPlug) SetDeviceInfo(params request.GenericDeviceInfoParams) error {
-	_, err := api.RequestData[response.DeviceInfoGeneric](t.client, request.RequestSetDeviceInfo, params.GetJsonValue())
-	return err
+func (t *TapoPlug) SetDeviceInfo(info request.GenericDeviceInfoParams) error {
+	return api.SetDeviceInfo(t.client, info.GetJsonValue())
 }
 
 // On turns the device on.
