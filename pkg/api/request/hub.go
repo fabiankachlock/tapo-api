@@ -14,10 +14,6 @@ type PlayAlarmParams struct {
 	// A map must be used explicitly, because otherwise there is no way of differentiating
 	// between an empty value and a value that was not set.
 	jsonValue map[string]interface{}
-
-	Duration int         `json:"alarm_duration"`
-	Volume   AlarmVolume `json:"alarm_volume"`
-	Type     string      `json:"alarm_type"`
 }
 
 func NewPlayAlarmParams(alarmType string) PlayAlarmParams {

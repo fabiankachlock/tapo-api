@@ -1,13 +1,7 @@
 package api
 
-// TODO: remove
-func RequestVoid(d *ApiClient, method string, params interface{}) error {
-	_, err := d.Request(method, params, true)
-	return err
-}
-
 // TODO: add withToken to method signature
-func RequestData[T any](d *ApiClient, method string, params interface{}) (T, error) {
+func RequestData[T any](d *ApiClient, method string, params interface{}, withToken bool) (T, error) {
 	var value T
 	resp, err := d.Request(method, params, true)
 	if err != nil {

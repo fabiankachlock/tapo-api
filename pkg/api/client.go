@@ -19,8 +19,8 @@ type ApiClient struct {
 }
 
 // NewClient creates a new ApiClient.
-func NewClient(email, password string, protocol Protocol) ApiClient {
-	return ApiClient{
+func NewClient(email, password string, protocol Protocol) *ApiClient {
+	return &ApiClient{
 		username: email,
 		password: password,
 		protocol: protocol,
@@ -100,12 +100,12 @@ func (c *ApiClient) RequestVoid(method string, params interface{}, withToken boo
 // RequestData sends a request to the device and returns the response. The response is checked for errors.
 // The provided response must be a pointer of the expected response type. It will be wrapped within a [response.TapoResponse]
 // representing [response.TapoResponse.Result] to check for errors.
-func (c *ApiClient) RequestData(method string, params interface{}, withToken bool, response interface{}) error {
+func (c *ApiClient) RequestData(method string, params interface{}, withToken bool, responseValue interface{}) error {
 	raw, err := c.Request(method, params, true)
 	if err != nil {
 		return err
 	}
-	tapoResponse, err := raw.UnmarshalResponse(&response)
+	tapoResponse, err := raw.UnmarshalResponse(&responseValue)
 	if err != nil {
 		return err
 	}
@@ -113,25 +113,12 @@ func (c *ApiClient) RequestData(method string, params interface{}, withToken boo
 	if tapoResponse.HasError() {
 		return tapoResponse.GetError()
 	}
-	return nil
-}
 
-// GetSupportedAlarmTypes returns a list of supported alarm types by the device.
-func (c *ApiClient) GetSupportedAlarmTypes() (response.SupportedAlarmTypeList, error) {
-	value := response.SupportedAlarmTypeList{}
-	err := c.RequestData(request.RequestSupportedAlarmTypes, request.EmptyParams, true, &value)
-	if err != nil {
-		return response.SupportedAlarmTypeList{}, err
+	if decodable, ok := tapoResponse.Result.(response.Decodable); ok {
+		err := decodable.Decode()
+		if err != nil {
+			return err
+		}
 	}
-	return value, nil
-}
-
-// PlayAlarm plays an alarm on the device.
-func (c *ApiClient) PlayAlarm(params request.PlayAlarmParams) error {
-	return c.RequestVoid(request.RequestPlayAlarm, params.GetJsonValue(), true)
-}
-
-// StopAlarm stops the playing alarm on the device.
-func (c *ApiClient) StopAlarm() error {
-	return c.RequestVoid(request.RequestStopAlarm, request.EmptyParams, true)
+	return nil
 }

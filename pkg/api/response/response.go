@@ -59,20 +59,4 @@ type UsageByPeriod struct {
 	Past7  uint64 `json:"past7"`
 	Past30 uint64 `json:"past30"`
 }
-
-// DeviceInfoPlug holds information about the energy usage of the device.
-type EnergyUsage struct {
-	LocalTime    string `json:"local_time"`
-	CurrentPower uint64 `json:"current_power"`
-	TodayRuntime uint64 `json:"today_runtime"`
-	TodayEnergy  uint64 `json:"today_energy"`
-	MonthRuntime uint64 `json:"month_runtime"`
-	MonthEnergy  uint64 `json:"month_energy"`
-}
-
-// CurrentPower holds information about the current power usage of the device.
-type CurrentPower struct {
-	CurrentPower uint64 `json:"current_power"`
-}
-
 type EmptyResponse struct{}

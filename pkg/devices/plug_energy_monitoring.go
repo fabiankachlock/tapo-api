@@ -100,7 +100,7 @@ func (t *TapoEnergyMonitoringPlug) GetDeviceUsage() (response.DeviceUsageEnergyM
 }
 
 // GetEnergyUsage returns the energy usage of the device.
-func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params request.GetEnergyDataParams) (response.EnergyUsage, error) {
+func (t *TapoEnergyMonitoringPlug) GetEnergyUsage(params request.EnergyDataParams) (response.EnergyUsage, error) {
 	return api.RequestData[response.EnergyUsage](t.client, request.RequestGetEnergyUsage, params)
 }
 
