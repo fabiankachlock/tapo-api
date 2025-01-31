@@ -126,3 +126,13 @@ func ControlChild[T any](c *ApiClient, deviceId string, childRequest request.Tap
 	}
 	return targetResponse.Result, nil
 }
+
+// SetDeviceInfo sets the device information.
+func SetDeviceInfo[T any](c *ApiClient, params map[string]interface{}) error {
+	return c.RequestVoid(request.RequestSetDeviceInfo, params, true)
+}
+
+// SetLightingEffect sets the lighting effect of the device.
+func SetLightingEffect(c *ApiClient, effect request.LightingEffect) error {
+	return c.RequestVoid(request.RequestSetLightingEffect, effect, true)
+}
