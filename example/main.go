@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fabiankachlock/tapo-api/pkg/api"
-	"github.com/fabiankachlock/tapo-api/pkg/api/response"
 	"github.com/fabiankachlock/tapo-api/pkg/klap"
 	"github.com/joho/godotenv"
 )
@@ -49,24 +47,24 @@ func main() {
 	// }
 	// fmt.Printf("%+v", resp)
 
-	resp, err := client.Request("get_device_info", map[string]interface{}{}, true)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(resp.Raw()))
-	resp1 := response.TapoResponse[response.DeviceInfoLight]{}
-	err = resp.UnmarshalRaw(&resp1)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%+v\n", resp1)
+	// resp, err := client.Request("get_device_info", map[string]interface{}{}, true)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(string(resp.Raw()))
+	// resp1 := response.TapoResponse[response.DeviceInfoLight]{}
+	// err = resp.UnmarshalRaw(&resp1)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("%+v\n", resp1)
 
-	resp2 := response.DeviceInfoLight{}
-	_, err = resp.UnmarshalResponse(&resp2)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%+v\n", resp2.Avatar)
+	// resp2 := response.DeviceInfoLight{}
+	// _, err = resp.UnmarshalResponse(&resp2)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("%+v\n", resp2.Avatar)
 
 	// resp, err := client.Request("play_alarm", map[string]interface{}{
 	// 	"alarm_duration": 2,

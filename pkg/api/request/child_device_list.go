@@ -7,19 +7,14 @@ type ChildDeviceListParams struct {
 	jsonValue map[string]interface{}
 }
 
-func NewChildDeviceListParams() ChildDeviceListParams {
+func NewChildDeviceListParams(startIndex uint16) ChildDeviceListParams {
 	return ChildDeviceListParams{
 		jsonValue: map[string]interface{}{
-			"start_index": 0,
+			"start_index": startIndex,
 		},
 	}
 }
 
 func (c ChildDeviceListParams) GetJsonValue() map[string]interface{} {
 	return c.jsonValue
-}
-
-func (c ChildDeviceListParams) StartAt(startIndex uint16) ChildDeviceListParams {
-	c.jsonValue["start_index"] = startIndex
-	return c
 }

@@ -22,6 +22,7 @@ type DeviceInfoGenericChildDevice struct {
 	Specs                   string     `json:"specs"`
 	Status                  StatusType `json:"status"`
 	Type                    string     `json:"type"`
+	Model                   string     `json:"model"`
 	LastOnboardingTimestamp uint64     `json:"lastOnboardingTimestamp"`
 	// The time in seconds between each report.
 	ReportInterval   uint32 `json:"report_interval"`

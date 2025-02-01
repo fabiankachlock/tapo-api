@@ -1,12 +1,9 @@
 package devices
 
 import (
-	"encoding/json"
-
 	"github.com/fabiankachlock/tapo-api/pkg/api"
 	"github.com/fabiankachlock/tapo-api/pkg/api/request"
 	"github.com/fabiankachlock/tapo-api/pkg/api/response"
-	childdevices "github.com/fabiankachlock/tapo-api/pkg/api/response/child_devices"
 )
 
 // TapoHub is the main struct to interact with the [H100] & [H200] devices.
@@ -46,145 +43,59 @@ func (t *TapoHub) RefreshSession() error {
 // GetDeviceInfo returns the device information.
 // It is not guaranteed to contain all the properties returned from the Tapo API.
 func (t *TapoHub) GetDeviceInfo() (response.DeviceInfoHub, error) {
-	return api.RequestData[response.DeviceInfoHub](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
+	return api.GetDeviceInfo[response.DeviceInfoHub](t.client)
 }
 
 // GetDeviceInfoJSON returns the device information in raw JSON format.
 func (t *TapoHub) GetDeviceInfoJSON() (map[string]interface{}, error) {
-	return api.RequestData[map[string]interface{}](t.client, request.RequestGetDeviceInfo, request.EmptyParams)
-}
-
-func (t *TapoHub) GetChildDeviceList() (ChildDeviceList, error) {
-	resp, err := t.client.Request(request.RequestGetChildDeviceList, request.EmptyParams, true)
-	if err != nil {
-		return ChildDeviceList{}, err
-	}
-
-	data := response.TapoResponse[rawDeviceList]{}
-	err = json.Unmarshal(resp.Raw(), &data)
-	if err != nil {
-		return ChildDeviceList{}, err
-	}
-
-	devices := []ChildDeviceWrapper{}
-	for _, rawDeviceJson := range data.Result.Devices {
-		devices = append(devices, ChildDeviceWrapper{rawDeviceJson})
-	}
-	return ChildDeviceList{
-		Devices: devices,
-		Start:   data.Result.Start,
-		Sum:     data.Result.Sum,
-	}, nil
-}
-
-func (t *TapoHub) GetChildDeviceComponentList() (response.ChildDeviceComponentList, error) {
-	return api.RequestData[response.ChildDeviceComponentList](t.client, request.RequestGetChildDeviceComponentList, request.EmptyParams)
-}
-
-func getChild(by func(ChildDeviceWrapper) (bool, error), devices []ChildDeviceWrapper) (bool, ChildDeviceWrapper, error) {
-	for _, device := range devices {
-		found, err := by(device)
-		if err != nil {
-			return false, ChildDeviceWrapper{}, err
-		}
-		if found {
-			return true, device, nil
-		}
-	}
-	return false, ChildDeviceWrapper{}, nil
-}
-
-func (t *TapoHub) GetChildById(deviceId string) (bool, ChildDeviceWrapper, error) {
-	children, err := t.GetChildDeviceList()
-	if err != nil {
-		return false, ChildDeviceWrapper{}, err
-	}
-
-	return getChild(func(c ChildDeviceWrapper) (bool, error) {
-		return c.hasDeviceId(deviceId)
-	}, children.Devices)
-}
-
-func (t *TapoHub) GetChildByNickname(nickname string) (bool, ChildDeviceWrapper, error) {
-	children, err := t.GetChildDeviceList()
-	if err != nil {
-		return false, ChildDeviceWrapper{}, err
-	}
-
-	return getChild(func(c ChildDeviceWrapper) (bool, error) {
-		return c.hasNickname(nickname)
-	}, children.Devices)
-}
-
-func (t *TapoHub) GetChild(nicknameOrId string) (bool, ChildDeviceWrapper, error) {
-	children, err := t.GetChildDeviceList()
-	if err != nil {
-		return false, ChildDeviceWrapper{}, err
-	}
-
-	return getChild(func(c ChildDeviceWrapper) (bool, error) {
-		found, err := c.hasNickname(nicknameOrId)
-		if err != nil {
-			return false, err
-		}
-		if found {
-			return true, nil
-		}
-		return c.hasDeviceId(nicknameOrId)
-	}, children.Devices)
-}
-
-func (t *TapoHub) GetT315(nicknameOrId string) (bool, childdevices.DeviceInfoT31X, error) {
-	found, device, err := t.GetChild(nicknameOrId)
-	if err != nil {
-		return false, childdevices.DeviceInfoT31X{}, err
-	}
-	if !found {
-		return false, childdevices.DeviceInfoT31X{}, nil
-	}
-
-	info, err := device.AsT315()
-	return true, info, err
-}
-
-func (t *TapoHub) GetT310(nicknameOrId string) (bool, childdevices.DeviceInfoT31X, error) {
-	found, device, err := t.GetChild(nicknameOrId)
-	if err != nil {
-		return false, childdevices.DeviceInfoT31X{}, err
-	}
-	if !found {
-		return false, childdevices.DeviceInfoT31X{}, nil
-	}
-
-	info, err := device.AsT310()
-	return true, info, err
-}
-
-func (t *TapoHub) GetT300(nicknameOrId string) (bool, childdevices.DeviceInfoT300, error) {
-	found, device, err := t.GetChild(nicknameOrId)
-	if err != nil {
-		return false, childdevices.DeviceInfoT300{}, err
-	}
-	if !found {
-		return false, childdevices.DeviceInfoT300{}, nil
-	}
-
-	info, err := device.AsT300()
-	return true, info, err
+	return api.GetDeviceInfo[map[string]interface{}](t.client)
 }
 
 func (t *TapoHub) GetSupportedAlarms() (response.SupportedAlarmTypeList, error) {
-	return api.RequestData[response.SupportedAlarmTypeList](t.client, request.RequestSupportedAlarmTypes, request.EmptyParams)
+	return api.GetSupportedAlarmTypes(t.client)
 }
 
-func (t *TapoHub) PlayAlarm(alarmType string, volume request.AlarmVolume, duration int) error {
-	return api.RequestVoid(t.client, request.RequestPlayAlarm, request.PlayAlarmParams{
-		Type:     alarmType,
-		Volume:   volume,
-		Duration: duration,
-	})
+func (t *TapoHub) PlayAlarm(params request.PlayAlarmParams) error {
+	return api.PlayAlarm(t.client, params)
 }
 
 func (t *TapoHub) StopAlarm() error {
-	return api.RequestVoid(t.client, request.RequestStopAlarm, request.EmptyParams)
+	return api.StopAlarm(t.client)
+}
+
+func (t *TapoHub) GetChildDeviceListJSON(startIndex uint16) (map[string]interface{}, error) {
+	return api.GetChildDeviceList[map[string]interface{}](t.client, request.NewChildDeviceListParams(startIndex))
+}
+
+func (t *TapoHub) GetChildDeviceList(startIndex uint16) (*TapoChildDeviceList, error) {
+	list, err := api.GetChildDeviceList[response.ChildDeviceList](t.client, request.NewChildDeviceListParams(startIndex))
+	if err != nil {
+		return nil, err
+	}
+
+	wrappedChildDevices := []*TapoChildDevice{}
+	for _, rawDeviceJson := range list.Devices {
+		wrappedChildDevices = append(wrappedChildDevices, &TapoChildDevice{t, rawDeviceJson})
+	}
+	return &TapoChildDeviceList{
+		Devices:    wrappedChildDevices,
+		StartIndex: list.StartIndex,
+		Sum:        list.Sum,
+	}, nil
+}
+
+func (t *TapoHub) GetAllChildDevices(startIndex uint16) (*TapoChildDeviceList, error) {
+	firstPage, err := t.GetChildDeviceList(startIndex)
+	if err != nil {
+		return nil, err
+	}
+	err = firstPage.FetchAll()
+	if err != nil {
+		return nil, err
+	}
+	return firstPage, nil
+}
+
+func (t *TapoHub) GetChildDeviceComponentList() (map[string]interface{}, error) {
+	return api.GetChildDeviceComponentList[map[string]interface{}](t.client)
 }
