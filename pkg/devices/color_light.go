@@ -15,29 +15,29 @@ type TapoColorLight struct {
 	client *api.ApiClient
 }
 
-func NewColorLight(ip string, client api.ApiClient) (*TapoColorLight, error) {
+func NewColorLight(ip string, client *api.ApiClient) (*TapoColorLight, error) {
 	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoColorLight{
-		client: &client,
+		client: client,
 	}, nil
 }
 
 // NewL510 creates a new Tapo L510 device.
-func NewL530(ip string, client api.ApiClient) (*TapoColorLight, error) {
+func NewL530(ip string, client *api.ApiClient) (*TapoColorLight, error) {
 	return NewColorLight(ip, client)
 }
 
 // NewL535 creates a new Tapo L535 device.
-func NewL535(ip string, client api.ApiClient) (*TapoColorLight, error) {
+func NewL535(ip string, client *api.ApiClient) (*TapoColorLight, error) {
 	return NewColorLight(ip, client)
 }
 
 // NewL630 creates a new Tapo L630 device.
-func NewL630(ip string, client api.ApiClient) (*TapoColorLight, error) {
+func NewL630(ip string, client *api.ApiClient) (*TapoColorLight, error) {
 	return NewColorLight(ip, client)
 }
 

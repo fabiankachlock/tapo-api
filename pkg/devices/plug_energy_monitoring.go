@@ -14,24 +14,24 @@ type TapoEnergyMonitoringPlug struct {
 	client *api.ApiClient
 }
 
-func NewEnergyMonitoringPlug(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
+func NewEnergyMonitoringPlug(ip string, client *api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
 	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoEnergyMonitoringPlug{
-		client: &client,
+		client: client,
 	}, nil
 }
 
 // NewP110 creates a new Tapo P110 device.
-func NewP110(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
+func NewP110(ip string, client *api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
 	return NewEnergyMonitoringPlug(ip, client)
 }
 
 // NewP115 creates a new Tapo P115 device.
-func NewP115(ip string, client api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
+func NewP115(ip string, client *api.ApiClient) (*TapoEnergyMonitoringPlug, error) {
 	return NewEnergyMonitoringPlug(ip, client)
 }
 

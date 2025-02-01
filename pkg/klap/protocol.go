@@ -21,7 +21,7 @@ type KLAPProtocol struct {
 	cipher      *KLAPCipher
 }
 
-func NewProtocol() (*KLAPProtocol, error) {
+func NewProtocol(timeout time.Duration) (*KLAPProtocol, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, fmt.Errorf("klap protocol: failed to create cookie jar: %w", err)
@@ -30,7 +30,8 @@ func NewProtocol() (*KLAPProtocol, error) {
 	client := &KLAPProtocol{
 		cookieJar: jar,
 		client: &http.Client{
-			Jar: jar,
+			Jar:     jar,
+			Timeout: timeout,
 		},
 	}
 

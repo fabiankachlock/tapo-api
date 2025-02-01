@@ -13,14 +13,14 @@ type TapoGenericDevice struct {
 }
 
 // NewGenericDevice create a handler for a generic Tapo device.
-func NewGenericDevice(ip string, client api.ApiClient) (*TapoGenericDevice, error) {
+func NewGenericDevice(ip string, client *api.ApiClient) (*TapoGenericDevice, error) {
 	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoGenericDevice{
-		client: &client,
+		client: client,
 	}, nil
 }
 

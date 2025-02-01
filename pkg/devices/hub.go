@@ -14,24 +14,24 @@ type TapoHub struct {
 	client *api.ApiClient
 }
 
-func NewHub(ip string, client api.ApiClient) (*TapoHub, error) {
+func NewHub(ip string, client *api.ApiClient) (*TapoHub, error) {
 	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoHub{
-		client: &client,
+		client: client,
 	}, nil
 }
 
 // NewH100 creates a new Tapo H100 device.
-func NewH100(ip string, client api.ApiClient) (*TapoHub, error) {
+func NewH100(ip string, client *api.ApiClient) (*TapoHub, error) {
 	return NewHub(ip, client)
 }
 
 // NewH200 creates a new Tapo H200 device.
-func NewH200(ip string, client api.ApiClient) (*TapoHub, error) {
+func NewH200(ip string, client *api.ApiClient) (*TapoHub, error) {
 	return NewHub(ip, client)
 }
 

@@ -13,19 +13,19 @@ type TapoRgbLightStrip struct {
 	client *api.ApiClient
 }
 
-func NewRgbLightStrip(ip string, client api.ApiClient) (*TapoRgbLightStrip, error) {
+func NewRgbLightStrip(ip string, client *api.ApiClient) (*TapoRgbLightStrip, error) {
 	err := client.Login(ip)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TapoRgbLightStrip{
-		client: &client,
+		client: client,
 	}, err
 }
 
 // NewL920 creates a new Tapo L920 device.
-func NewL900(ip string, client api.ApiClient) (*TapoRgbLightStrip, error) {
+func NewL900(ip string, client *api.ApiClient) (*TapoRgbLightStrip, error) {
 	return NewRgbLightStrip(ip, client)
 }
 

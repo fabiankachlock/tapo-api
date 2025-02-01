@@ -45,19 +45,12 @@ func main() {
 ## Device support
 
 Supported Devices:
-- P110
-- P115 (tested)
-- H100 (tested)
-- H200
-- L900
-- L920
+- P110, P115 (tested)
+- H100 (tested), H200
+- L900, L920
 - L930 (tested)
-- L510
-- L520
-- L530
-- L535 (tested)
-- L610
-- L630
+- L510, L520, L610
+- L530, L535 (tested), L630
 
 Supported Protocols:
 - KLAP (tested)
@@ -69,20 +62,20 @@ Supported Protocols:
 | Feature<br/><br/><br/>               | GenericDevice<br/><br/><br/> | L510<br/>L520<br/>L610 | L530<br/>L535<br/>L630<br/> | L900<br/><br/><br/> | L920<br/>L930<br/><br/> | P100<br/>P105<br/><br/> | P110<br/>P115<br/><br/> | P300<br/>P304<br/><br/> | H100<br/>H200<br/><br/> |
 | ------------------------------------ | :--------------------------: | :--------------------: | :-------------------------: | :-----------------: | :---------------------: | :---------------------: | :---------------------: | :---------------------: | :---------------------: |
 | device_reset                         |          &#x2705;\*          |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |        &#x2705;         |        &#x2705;         |                         |                         |
-| get_child_device_component_list_json |                              |                        |                             |                     |                         |                         |                         |         &check;         |       &#x2705;\*        |
+| get_child_device_component_list_json |                              |                        |                             |                     |                         |                         |                         |         &check;         |        &#x2705;         |
 | get_child_device_list                |                              |                        |                             |                     |                         |                         |                         |         &check;         |        &#x2705;         |
-| get_child_device_list_json           |                              |                        |                             |                     |                         |                         |                         |         &check;         |         &check;         |
+| get_child_device_list_json           |                              |                        |                             |                     |                         |                         |                         |         &check;         |        &#x2705;         |
 | get_current_power                    |                              |                        |                             |                     |                         |                         |        &#x2705;         |                         |                         |
 | get_device_info                      |           &#x2705;           |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |        &#x2705;         |        &#x2705;         |         &check;         |        &#x2705;         |
 | get_device_info_json                 |           &#x2705;           |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |        &#x2705;         |        &#x2705;         |         &check;         |        &#x2705;         |
 | get_device_usage                     |                              |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |        &#x2705;         |        &#x2705;         |                         |                         |
 | get_energy_data                      |                              |                        |                             |                     |                         |                         |         &check;         |                         |                         |
 | get_energy_usage                     |                              |                        |                             |                     |                         |                         |        &#x2705;         |                         |                         |
-| get_supported_ringtone_list          |                              |                        |                             |                     |                         |                         |                         |                         |       &#x2705;\*        |
+| get_supported_ringtone_list          |                              |                        |                             |                     |                         |                         |                         |                         |        &#x2705;         |
 | off                                  |           &#x2705;           |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |        &#x2705;         |        &#x2705;         |                         |                         |
 | on                                   |           &#x2705;           |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |        &#x2705;         |        &#x2705;         |                         |                         |
 | toggle\*                             |           &#x2705;           |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |        &#x2705;         |                         |                         |
-| play_alarm                           |                              |                        |                             |                     |                         |                         |                         |                         |       &#x2705;\*        |
+| play_alarm                           |                              |                        |                             |                     |                         |                         |                         |                         |        &#x2705;         |
 | refresh_session                      |           &#x2705;           |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |        &#x2705;         |        &#x2705;         |         &check;         |        &#x2705;         |
 | set_brightness                       |                              |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
 | set_color                            |                              |                        |           &check;           |       &check;       |         &check;         |                         |                         |                         |                         |
@@ -90,7 +83,7 @@ Supported Protocols:
 | set_device_info                      |          &#x2705;\*          |        &#x2705;        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
 | set_hue_saturation                   |                              |                        |          &#x2705;           |      &#x2705;       |        &#x2705;         |                         |                         |                         |                         |
 | set_lighting_effect                  |                              |                        |                             |                     |        &#x2705;         |                         |                         |                         |                         |
-| stop_alarm                           |                              |                        |                             |                     |                         |                         |                         |                         |       &#x2705;\*        |
+| stop_alarm                           |                              |                        |                             |                     |                         |                         |                         |                         |        &#x2705;         |
 
 
 \* Such APIs are go only and not available in the reference implementation in rust.
@@ -102,10 +95,10 @@ Supported Protocols:
 
 | Feature<br/><br/>                | KE100<br/><br/> | S200B<br/><br/> | T100<br/><br/> | T110<br/><br/> | T300<br/><br/> | T310<br/>T315 |
 | -------------------------------- | :-------------: | :-------------: | :------------: | :------------: | :------------: | :-----------: |
-| get_device_info \*               |     &check;     |     &check;     |    &check;     |    &check;     |    &#x2705;    |   &#x2705;    |
-| get_device_info_json             |     &check;     |     &check;     |    &check;     |    &check;     |    &check;     |    &check;    |
-| get_temperature_humidity_records |                 |                 |                |                |                |    &check;    |
-| get_trigger_logs                 |                 |     &check;     |    &check;     |    &check;     |    &check;     |               |
+| get_device_info \*               |     &check;     |    &#x2705;     |    &#x2705;    |    &#x2705;    |    &#x2705;    |   &#x2705;    |
+| get_device_info_json             |     &check;     |    &#x2705;     |    &#x2705;    |    &#x2705;    |    &#x2705;    |   &#x2705;    |
+| get_temperature_humidity_records |                 |                 |                |                |                |   &#x2705;    |
+| get_trigger_logs                 |                 |    &#x2705;     |    &#x2705;    |    &#x2705;    |    &#x2705;    |               |
 | set_child_protection             |     &check;     |                 |                |                |                |               |
 | set_frost_protection             |     &check;     |                 |                |                |                |               |
 | set_max_control_temperature      |     &check;     |                 |                |                |                |               |
