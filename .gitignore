@@ -23,3 +23,7 @@ go.work.sum
 
 # env file
 .env
+
+node_modules/
+docs/.vitepress/dist
+docs/.vitepress/cache
