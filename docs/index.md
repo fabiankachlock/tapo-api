@@ -4,18 +4,20 @@ layout: home
 
 hero:
   name: "tapo-api"
-  text: "Unofficial Tapo API Client written in Go."
-  tagline: My great project tagline
+  tagline: "Unofficial API Client for TP-Link Tapo devices written in Golang."
   image:
     src: /static/gopher.png
     alt: Gopher
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Introduction
+      link: /introduction
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Supported Devices
+      link: /devices/supported-devices
+    - theme: alt
+      text: Advanced Usage
+      link: /advanced/overview
 
 features:
   - title: Feature A

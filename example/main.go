@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/fabiankachlock/tapo-api"
 	"github.com/fabiankachlock/tapo-api/pkg/api"
 	"github.com/fabiankachlock/tapo-api/pkg/klap"
 	"github.com/joho/godotenv"
@@ -18,16 +19,28 @@ func main() {
 	tapoEmail := os.Getenv("TAPO_EMAIL")
 	tapoPass := os.Getenv("TAPO_PASS")
 
-	protocol, err := klap.NewProtocol()
+	client := tapo.NewClient(tapoEmail, tapoPass)
+
+	light, err := client.L535(tapoIp)
 	if err != nil {
 		panic(err)
 	}
 
-	client := api.NewClient(tapoEmail, tapoPass, protocol)
-	err = client.Login(tapoIp)
+	err = light.On()
 	if err != nil {
 		panic(err)
 	}
+
+	// protocol, err := klap.NewProtocol()
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// client := api.NewClient(tapoEmail, tapoPass, protocol)
+	// err = client.Login(tapoIp)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	// d, err := devices.NewL535(tapoIp, tapoEmail, tapoPass)
 	// if err != nil {

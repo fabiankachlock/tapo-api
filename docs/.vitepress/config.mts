@@ -1,10 +1,56 @@
 import { defineConfig } from "vitepress";
 
+const advanced = [
+  { text: "Overview", link: "/advanced/overview" },
+  { text: "API client", link: "/advanced/api-client" },
+  { text: "Custom Request", link: "/advanced/custom-request" },
+  { text: "Custom Response", link: "/advanced/custom-response" },
+  { text: "Custom Protocol", link: "/advanced/custom-protocol" },
+];
+
+const devices = [
+  {
+    text: "Supported devices",
+    link: "/devices/supported-devices",
+  },
+  { text: "Light", link: "/devices/light" },
+  { text: "Colored Light", link: "/devices/colored-light" },
+  { text: "RGB Light Strip", link: "/devices/rgb-light-strip" },
+  { text: "RGBIC Light Strip", link: "/devices/rgbic-light-strip" },
+  { text: "Plug", link: "/devices/plug" },
+  {
+    text: "Energy Monitoring Plug",
+    link: "/devices/energy-monitoring-plug",
+  },
+  { text: "Power Strip", link: "/devices/power-strip" },
+  { text: "Hub", link: "/devices/hub" },
+];
+
+const childDevices = [
+  { text: "Button", link: "/devices/children/button" },
+  {
+    text: "Motion Sensor",
+    link: "/devices/children/motion-sensor",
+  },
+  {
+    text: "Contact Sensor",
+    link: "/devices/children/contact-sensor",
+  },
+  {
+    text: "Water Leak Sensor",
+    link: "/devices/children/water-leak-sensor",
+  },
+  {
+    text: "Temperatur And Humidity Sensor",
+    link: "/devices/children/temp-hum-sensor",
+  },
+];
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "tapo-api",
   description: "Unofficial Tapo API Client written in Go.",
-  lang: "en",
+  lang: "en-US",
 
   head: [
     [
@@ -41,18 +87,47 @@ export default defineConfig({
     logo: "/static/gopher.png",
     nav: [
       { text: "Home", link: "/" },
-      { text: "Examples", link: "/markdown-examples" },
+      {
+        text: "Devices",
+        items: [
+          ...devices,
+          {
+            text: "Child Devices",
+            items: [...childDevices],
+          },
+        ],
+      },
+      {
+        text: "Advanced",
+        items: advanced,
+      },
     ],
 
     sidebar: [
       {
-        text: "Examples",
+        text: "Introduction",
+        link: "/introduction",
+      },
+      {
+        text: "Devices",
         items: [
-          { text: "Markdown Examples", link: "/markdown-examples" },
-          { text: "Runtime API Examples", link: "/api-examples" },
+          ...devices,
+          {
+            text: "Child Devices",
+            items: [...childDevices],
+          },
         ],
       },
+      {
+        text: "Advanced usage",
+        items: advanced,
+      },
     ],
+    editLink: {
+      pattern:
+        "https://github.com/fabiankachlock/tapo-api/edit/main/docs/:path",
+      text: "Edit this page on GitHub",
+    },
     socialLinks: [
       { icon: "github", link: "https://github.com/fabiankachlock/tapo-api" },
     ],
