@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -110,8 +111,13 @@ func (d *ApiClient) Request(method string, params interface{}) ([]byte, error) {
 		return []byte{}, err
 	}
 
-	buf := make([]byte, resp.ContentLength)
-	resp.Body.Read(buf)
+	defer resp.Body.Close()
+
+	buf, err := io.ReadAll(resp.Body)
+	if err != nil && err != io.EOF {
+		return []byte{}, err
+	}
+
 	decrypted, err := d.cipher.Decrypt(seq, buf)
 	if err != nil {
 		return []byte{}, err
